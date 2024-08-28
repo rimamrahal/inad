@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Anticipatory Gaze EC</title>
+    <script src="https://unpkg.com/jspsych@8.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@2.0.0"></script>
+
+    <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body></body>
+<script>
+    const jsPsych = initJsPsych();
+
+    var wordlist = [[],[]];
+    var used_words = [[],[]];
+
+    const trials = 10;
+
+    var count = trials;
+
+    fetch("wordlist_negative.txt")
+        .then((r) => r.text())
+        .then((text) => {
+            wordlist[0] = jsPsych.randomization.shuffle(text.match(/\S+/g));
+        })
+
+    fetch("wordlist_positive.txt")
+        .then((r) => r.text())
+        .then((text) => {
+            wordlist[1] = jsPsych.randomization.shuffle(text.match(/\S+/g));
+        })
+
+    const associations = jsPsych.randomization.shuffle([0, 0, 0, 1, 1, 1]);
+
+    // Define the image stimuli and associations
+    const images = jsPsych.randomization.shuffle([
+        { image: 'image1.png', association: associations[0] },
+        { image: 'image2.png', association: associations[1] },
+        { image: 'image3.png', association: associations[2] },
+        { image: 'image4.png', association: associations[3] },
+        { image: 'image5.png', association: associations[4] },
+        { image: 'image6.png', association: associations[5] },
+    ]);
+
+    // Randomize the positions for each subject
+    const positions = jsPsych.randomization.shuffle([
+        { left: '50%', top: '20%' },
+        { left: '80%', top: '35%' },
+        { left: '80%', top: '65%' },
+        { left: '50%', top: '80%' },
+        { left: '20%', top: '65%' },
+        { left: '20%', top: '35%' }
+    ]);
+
+    // Randomize the positions for each subject
+    const left_right = jsPsych.randomization.shuffle(['25%','75%']);
+
+    const welcome = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <div style="font-size:40px">Willkommen zur Studie!</div>
+            <p>
+                Diese Studie besteht aus verschiedenen Aufgaben, bei denen Sie Formen betrachten und Wörter lesen, Urteile fällen und einige Fragen zu Ihrer Person beantworten. Dabei interessiert uns neben Ihren Einschätzungen auch das Blickverhalten während die Aufgaben bearbeitet werden. Bitte beachten Sie, dass eine der Aufgaben das Lesen negativer Wörter beinhaltet, von denen einige sehr unangenehme Bedeutungen beinhalten können. Sie sollten daher nur an dieser Studie teilnehmen, wenn das für Sie in Ordnung ist. 
+                <br><br>
+                Infos zur Einverständniserklärung <br>
+                Datenschutz<br>
+                Freiwilligkeit, etc.<br>
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const evaluation1_intro = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Im Folgenden bitten wir Sie, farbige Quadrate zu beurteilen. 
+                
+                <br><br>
+
+                Sie werden nun 6 Quadrate in verschiedenen Farben sehen. Geben Sie bitte an, wie positiv oder negativ Ihre emotionalen Reaktionen auf die farbigen Quadrate sind. 
+
+                <br><br>
+
+                Dabei gibt es keine richtigen oder falschen Antworten. Es kommt uns nur auf Ihre persönliche Einschätzung an. 
+
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const evaluation1 = {
+        type: jsPsychHtmlSliderResponse,
+        timeline: [
+            {
+                stimulus: function () {
+                    const html = `
+                        <p>
+                            Wie positiv oder negativ ist Ihr Eindruck des Quadrats in dieser Farbe?
+                        </p>
+                        <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;">
+                    `
+                    return html;
+                }
+            }
+        ],
+        timeline_variables: [
+            { image: images[0].image },
+            { image: images[1].image },
+            { image: images[2].image },
+            { image: images[3].image },
+            { image: images[4].image },
+            { image: images[5].image },
+        ],
+        button_label: 'Weiter',
+        require_movement: true,
+        labels: ['sehr negativ', 'neutral', 'sehr positiv'],
+    }
+
+    const free_sampling_transition = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Im Folgenden erfahren Sie mehr darüber, welche positiven oder negativen Eigenschaften mit den farbigen Quadraten verbunden sind. 
+                <br><br>
+                Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Sie wählen durch Anklicken jeweils eines der farbigen Quadrate aus. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.  
+                <br><br>
+                Danach kehren Sie zur Übersicht aller 6 Quadrate zurück. <b>Klicken Sie auf das Bild eines Quadrats</b>, um mehr über seine Eigenschaften zu erfahren. Insgesamt haben Sie die Möglichkeit, in <b>${trials} Durchgängen</b> etwas über die Eigenschaften der Quadrate zu erfahren.
+                <br><br>
+                <b>Sie können jedes Mal völlig frei entscheiden, bei welchem farbigen Quadrat Sie mehr über dessen Eigenschaften erfahren möchten.</b>
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const free_sampling_introduction = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Jetzt geht es mit der eigentlichen Aufgabe los. Hier eine kurze Erinnerung:
+                <br><br>
+                Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Sie wählen durch Anklicken jeweils eines der farbigen Quadrate aus. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.  
+                <br><br>
+                Danach kehren Sie zur Übersicht aller 6 Quadrate zurück. <b>Klicken Sie auf das Bild eines Quadrats</b>, um mehr über seine Eigenschaften zu erfahren. Insgesamt haben Sie die Möglichkeit, in <b>${trials} Durchgängen</b> etwas über die Eigenschaften der Quadrate zu erfahren.
+                <br><br>
+                <b>Sie können jedes Mal völlig frei entscheiden, bei welchem farbigen Quadrat Sie mehr über dessen Eigenschaften erfahren möchten.</b>
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const free_sampling = {
+        timeline: [
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: function () {
+                    const html = `
+                        Klicken Sie auf ein Quadrat, um einen Durchgang zu beginnen!
+                        <br><br>
+                        Verbleibende Durchgänge ${count}
+                    `
+                    return html;
+                },
+                choices: "NO_KEYS",
+                trial_duration: 2000
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: `+`,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '',
+                choices: "NO_KEYS",
+                on_start: function (trial) {
+                    let html = ``;
+                    for (let i = 0; i < images.length; i++) {
+                        const style = `position: absolute; left: ${positions[i].left}; top: ${positions[i].top}; transform: translateX(-50%) translateY(-50%); width: 100px; height: 100px; cursor: pointer;`;
+                        html += `<img src="${images[i].image}" style="${style}" id="img-${i}" data-image="${images[i].image}" onclick="handleImageClick(event, ${i})" />`;
+                    }
+                    trial.stimulus = html;
+                },
+                on_finish: function (data) {
+                    data.clicked_image = window.clicked_image;
+                    data.association = window.association;
+                },
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                on_start: function (trial) {
+                    const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
+                    let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
+                    
+                    const word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
+                    const style_word = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(+50px); width: 100px; height: 100px;`;
+                    html += `<p style="${style_word}">${word}</p>`
+                    used_words[jsPsych.data.get().last(2).values()[0].association].push(word);
+
+                    console.log(used_words)
+
+                    count --;
+                    if (count == 0)
+                        count = trials;
+                    trial.stimulus = html;
+                },
+                choices: "NO_KEYS",
+                trial_duration: 2000
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+        ]
+    }
+
+    // Function to handle image click
+    function handleImageClick(event, id) {
+        window.clicked_image = images[id].image;
+        window.association = images[id].association;
+        console.log(`Count: ${count}, Clicked image: ${window.clicked_image}, Association: ${window.association}`);
+        jsPsych.finishTrial();
+    }
+
+    // Define the free_sampling procedure
+    const free_samplings = {
+        timeline: []
+    };
+
+    for (let i=0; i<trials; i++) {
+        free_samplings.timeline.push(free_sampling);
+    }
+
+    const evaluation2_intro = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Bitte beurteilen Sie die farbigen Quadrate noch einmal. 
+                <br><br>
+                Sie werden nun alle 6 Quadrate einzeln sehen. Geben Sie bitte an, wie <b>positiv oder negativ</b> Ihre emotionalen Reaktionen auf das jeweilige Quadrat ist. 
+                Dabei gibt es wie zuvor keine richtigen oder falschen Antworten. Es kommt uns nur auf Ihre persönliche Einschätzung an. 
+                <br><br>
+                Dieses Mal geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Geben Sie an, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const evaluation2 = {
+        timeline: [
+            {
+                type: jsPsychHtmlSliderResponse,
+                stimulus: function () {
+                    const html = `
+                            <p>
+                                Wie positiv oder negativ ist Ihr Eindruck des Quadrats in dieser Farbe?
+                            </p>
+                            <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;">
+                        `
+                    return html;
+                },
+                require_movement: true,
+                labels: ['sehr negativ', 'neutral', 'sehr positiv'],
+            },
+            {
+                type: jsPsychSurveyLikert,
+                questions: [
+                    {
+                        prompt: "Wie sicher sind Sie sich bei Ihrer Einschätzung dieses Quadrats?",
+                        labels: [
+                            "0<br>gar nicht sicher",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10<br>extrem sicher",
+                        ],
+                        required: true,
+                    }
+                ]
+            },
+        ],
+        timeline_variables: [
+            { image: images[0].image },
+            { image: images[1].image },
+            { image: images[2].image },
+            { image: images[3].image },
+            { image: images[4].image },
+            { image: images[5].image },
+        ],
+        button_label: 'Weiter',
+    }
+
+    const estimate = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: "NO_KEYS",
+        stimulus: `
+            <p>
+                Während der Durchgänge sind die Quadrate gleichzeitig mit positiven oder negativen Eigenschaftsworte gezeigt worden. <br><br>Ihrer Schätzung nach, wie viele der ${trials} Eigenschaftsworte war positiv bzw. negativ?
+                <br><br>
+                Anzahl der positiven Eigenschaftsworte: <input id="estimate_positive" name="estimate_positive" type="number" min="0" max="${trials}" style="width:100px;" oninput="checkEstimates()" required /><br>
+                Anzahl der negativen Eigenschaftsworte: <input id="estimate_negative" name="estimate_negative" type="number" min="0" max="${trials}" style="width:100px;" oninput="checkEstimates()" required />
+                <br><br>
+                ACHTUNG! Die Summer beider Zahlen muss ${trials} ergeben!
+            </p>
+            <button id="next" class="jspsych-btn" onclick="jsPsych.finishTrial()" disabled>Weiter</button>
+        `,
+    };
+
+    const estimate_individuals = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: "NO_KEYS",
+        stimulus: function () {
+            let html = 'Schätzen Sie: Wie oft haben Sie die jeweiligen Quadraten gesehen?<br><br>';
+            for (let i=0; i<images.length; i++) {
+                html += `
+                    <img src="${images[i].image}" style="width:50px; transform: translateY(+25%); margin-right: 50px;" />
+                    <input name="estimate_${i}" type="number" min="0" max="${trials}" style="width:100px;" oninput="checkEstimates()" required /> Durchgänge (0 bis ${trials})<br>
+                `
+            }
+            html += `
+                <p>ACHTUNG! Die Summer aller Zahlen muss ${trials} ergeben!</p>
+                <button id="next" class="jspsych-btn" onclick="jsPsych.finishTrial()" disabled>Weiter</button>
+            `
+            return html;
+        },
+        on_finish: function(data) {
+            data.estimate_individuals = window.estimate_individuals;
+        }
+    };
+
+    // Function to handle button click
+    function checkEstimates() {
+        estimates = document.querySelectorAll("input[type=number]");
+        
+        var est = 0;
+
+        let estimate_individuals = "";
+
+        for (let i=0; i<estimates.length; i++) {
+            est += parseInt(estimates[i].value);
+            if (parseInt(estimates[i].value) > 0)
+                estimate_individuals += 1;
+            else
+                estimate_individuals += 0;
+        }
+
+        window.estimate_individuals = estimate_individuals;
+
+        console.log(estimate_individuals);
+
+        if(est==trials) {
+            document.getElementById("next").disabled = false;
+        } else {
+            document.getElementById("next").disabled = true;
+        }
+    }
+
+    const joint_occurence_intro = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Nachfolgend sehen Sie alle Quadrate, für die Sie mindestens einen Durchgang angegeben haben. 
+                <br><br>
+                Geben Sie für jedes Quadrat an, ob es Ihrer Meinung nach öfter zusammen mit positiven oder negativen Eigenschaftsworten auftrat.
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    var joint_occurence = {
+        type: jsPsychSurveyMultiChoice,
+        timeline: [
+            {
+                preamble: function () {
+                    let html = `
+                        <p style="text-align: center;">
+                            <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;"><br>
+                            Trat dieses Quadrat öfter gemeinsam mit positiven oder mit negativen Eigenschaftsworten auf?
+                        </p>
+                    `
+                    return html;
+                }, 
+                questions: [
+                    {
+                        prompt: "", 
+                        options: [
+                            'Mit <b>positiven</b> Eigenschaftsworten', 
+                            'Mit <b>negativen</b> Eigenschaftsworten'
+                        ], 
+                        required: true
+                    }
+                ],
+            },
+        ],
+        timeline_variables: [
+            { image: images[0].image },
+            { image: images[1].image },
+            { image: images[2].image },
+            { image: images[3].image },
+            { image: images[4].image },
+            { image: images[5].image },
+        ],
+        button_label: 'Weiter',
+        sample: {
+            type: 'custom',
+            fn: function(t){ // return only the indices of the images that were estimated to be shown at least once
+                var indices = [];
+                for (let i=0; i<images.length; i++) {
+                    if (jsPsych.data.get().last(2).values()[0].estimate_individuals[i] == '1')
+                        indices.push(i);
+                }
+                console.log(indices);
+                return indices;
+            }
+        }
+    }
+
+    const word_rating_intro = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Nun bewerten Sie die Eigenschaftsworte, die den Quadraten zugeordnet wurden. 
+                <br><br>
+                Geben Sie bitte an, wie <b>positiv oder negativ</b> Sie Ihre emotionale Reaktionen auf das entsprechende Eigenschaftswort sind.. 
+                <br><br>
+                Dabei gibt es wie zuvor keine richtigen oder falschen Antworten. Es kommt uns nur auf Ihre persönliche Einschätzung an. 
+                <br><br>
+                Geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Geben Sie an, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
+
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    let word = "";
+
+    const word_rating = {
+        timeline: [
+            {
+                type: jsPsychHtmlSliderResponse,
+                stimulus: function () {
+                    used_words[0] = jsPsych.randomization.shuffle(used_words[0]);
+                    used_words[1] = jsPsych.randomization.shuffle(used_words[1]);
+
+                    console.log(used_words[0]);
+
+                    if (used_words[0].length == 0) {
+                        word = used_words[1].pop();
+                    } else if (used_words[1].length == 0) {
+                        word = used_words[0].pop();
+                    } else {
+                        word = used_words[Math.floor(Math.random() * 2)].pop();
+                    }
+
+                    console.log(word);
+
+                    let html = `
+                        <p>
+                            Wie positiv oder negativ ist Ihr Eindruck dieses Eigenschaftsworts?<br><br>
+                            ${word}
+                        </p>
+                    `
+                    return html;
+                },
+                require_movement: true,
+                labels: ['sehr negativ', 'neutral', 'sehr positiv'],
+            },
+            {
+                type: jsPsychSurveyLikert,
+                preamble: function () {
+                    let html = `
+                        <p>
+                            Wie sicher sind Sie sich bei Ihrer Einschätzung dieses Eigenschaftsworts?<br><br>
+                            ${word}
+                        </p>
+                    `
+                    return html;
+                },
+                questions: [
+                    {
+                        prompt: "",
+                        labels: [
+                            "0<br>gar nicht sicher",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10<br>extrem sicher",
+                        ],
+                        required: true,
+                    }
+                ]
+            }
+        ],
+        button_label: 'Weiter',
+        on_finish: function(data) {
+            data.word = word;
+        },
+    }
+
+    // Define the word_rating procedure
+    const word_ratings = {
+        timeline: []
+    };
+
+    for (let i=0; i<trials; i++) {
+        word_ratings.timeline.push(word_rating);
+    }
+
+    const regular_ec_introduction = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Im Folgenden erfahren Sie mehr darüber, welche positiven oder negativen Eigenschaften mit den farbigen Quadraten verbunden sind. 
+                <br><br>
+                Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
+                <br><br> 
+                Nach jedem Durchgang kehren Sie zur Übersicht aller 6 Quadrate zurück. Insgesamt werden <b>${trials} zufällige Durchgänge</b> gezeigt, in denen Sie etwas über die Eigenschaften der Quadrate erfahren.
+                <b>Bitte beobachten Sie diese Durchgänge aufmerksam.</b>
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const regular_ec = {
+        timeline: [
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: function () {
+                    const html = `
+                        Der Computer entscheidet nach dem Zufallsprinzip über den nächsten Durchgang!
+                        <br><br>
+                        Verbleibende Durchgänge ${count}
+                    `
+                    return html;
+                },
+                choices: "NO_KEYS",
+                trial_duration: 2000
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: `+`,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '',
+                choices: "NO_KEYS",
+                trial_duration: 2000,
+                on_start: function (trial) {
+                    let html = ``;
+                    for (let i = 0; i < images.length; i++) {
+                        const style = `position: absolute; left: ${positions[i].left}; top: ${positions[i].top}; transform: translateX(-50%) translateY(-50%); width: 100px; height: 100px;`;
+                        html += `<img src="${images[i].image}" style="${style}" id="img-${i}" data-image="${images[i].image}"/>`;
+                    }
+                    trial.stimulus = html;
+                },
+                on_finish: function (data) {
+                    rand_id = Math.floor(Math.random() * 6);
+                    data.clicked_image = images[rand_id].image;
+                    data.association = images[rand_id].association;
+                },
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                on_start: function (trial) {
+                    const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
+                    let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
+                    
+                    const word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
+                    const style_word = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(+50px); width: 100px; height: 100px;`;
+                    html += `<p style="${style_word}">${word}</p>`
+                    used_words[jsPsych.data.get().last(2).values()[0].association].push(word);
+
+                    console.log(used_words)
+
+                    count --;
+                    if (count == 0)
+                        count = trials;
+                    trial.stimulus = html;
+                },
+                choices: "NO_KEYS",
+                trial_duration: 2000
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+        ]
+    }
+
+    // Define the regular_ec procedure
+    const regular_ecs = {
+        timeline: []
+    };
+
+    for (let i=0; i<trials; i++) {
+        regular_ecs.timeline.push(regular_ec);
+    }
+
+    const regular_ec_extinction_introduction = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Bei der nächsten Aufgabe haben Sie die Möglichkeit, <b>noch einmal nacheinander mehr über diese Quadrate zu erfahren.</b>
+                <br><br>
+                Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
+                <br><br> 
+                Nach jedem Durchgang kehren Sie zur Übersicht aller 6 Quadrate zurück. Insgesamt werden <b>${trials} zufällige Durchgänge</b> gezeigt, in denen Sie etwas über die Eigenschaften der Quadrate erfahren.
+                <b>Bitte beobachten Sie diese Durchgänge aufmerksam.</b>
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const extinction_ec = {
+        timeline: [
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: function () {
+                    const html = `
+                        Der Computer entscheidet nach dem Zufallsprinzip über den nächsten Durchgang!
+                        <br><br>
+                        Verbleibende Durchgänge ${count}
+                    `
+                    return html;
+                },
+                choices: "NO_KEYS",
+                trial_duration: 2000
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: `+`,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '',
+                choices: "NO_KEYS",
+                trial_duration: 2000,
+                on_start: function (trial) {
+                    let html = ``;
+                    for (let i = 0; i < images.length; i++) {
+                        const style = `position: absolute; left: ${positions[i].left}; top: ${positions[i].top}; transform: translateX(-50%) translateY(-50%); width: 100px; height: 100px;`;
+                        html += `<img src="${images[i].image}" style="${style}" id="img-${i}" data-image="${images[i].image}"/>`;
+                    }
+                    trial.stimulus = html;
+                },
+                on_finish: function (data) {
+                    rand_id = Math.floor(Math.random() * 6);
+                    data.clicked_image = images[rand_id].image;
+                    data.association = images[rand_id].association;
+                },
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                on_start: function (trial) {
+                    const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
+                    let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
+                    
+                    count --;
+                    if (count == 0)
+                        count = trials;
+                    trial.stimulus = html;
+                },
+                choices: "NO_KEYS",
+                trial_duration: 2000
+            },
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: ``,
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+        ]
+    }
+
+    // Define the regular_ec procedure
+    const regular_plus_extinction_ecs = {
+        timeline: []
+    };
+
+    for (let i=0; i<trials/2; i++) {
+        regular_plus_extinction_ecs.timeline.push(regular_ec);
+    }
+
+    for (let i=0; i<trials/2; i++) {
+        regular_plus_extinction_ecs.timeline.push(extinction_ec);
+    }
+
+    const demographics = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: '<p>Abschließend bitten wir Sie noch um einige Angaben zu Ihrer Person:</b></p>',
+        html: `
+            <p> 
+                Alter in Jahren: <input name="age" type="number" required /><br>
+                Geschlecht: <input name="gender" type="text" required />
+            </p>
+        `,
+        button_label: ['Weiter'],
+    }
+
+    const end = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: "NO_KEYS",
+        stimulus: `
+            <p>
+                Danke für Ihre Teilnahme an der Studie! Sie können das Fenster jetzt schließen.
+            </p>
+        `,
+    }
+
+    time_line = [
+        welcome,
+        evaluation1_intro,
+        evaluation1,
+        free_sampling_transition,
+        free_sampling_introduction,
+        free_samplings,
+        evaluation2_intro,
+        evaluation2,
+        estimate,
+        estimate_individuals,
+        joint_occurence_intro,
+        joint_occurence,
+        word_rating_intro,
+        word_ratings,
+        regular_ec_introduction,
+        regular_ecs,
+        regular_ec_extinction_introduction,
+        regular_plus_extinction_ecs,
+        demographics,
+        end
+    ];
+
+    jsPsych.run([time_line]);
+
+</script>
+
+</html>

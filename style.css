@@ -1,0 +1,13 @@
+/* body {
+  background-color: #696969;
+}
+.jspsych-display-element {
+  font-size: 25px;
+  color: #8FBC8F;
+} */
+.jspsych-content {
+  max-width: 80%; 
+}
+.required {
+  display: none;
+}
