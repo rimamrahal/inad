@@ -74,7 +74,7 @@
         stimulus: `
             <div style="font-size:40px">Willkommen zur Studie!</div>
             <p>
-                Diese Studie besteht aus verschiedenen Aufgaben, bei denen Sie Formen betrachten und Wörter lesen, Urteile fällen und einige Fragen zu Ihrer Person beantworten. Dabei interessiert uns neben Ihren Einschätzungen auch das Blickverhalten während die Aufgaben bearbeitet werden. Bitte beachten Sie, dass eine der Aufgaben das Lesen negativer Wörter beinhaltet, von denen einige sehr unangenehme Bedeutungen beinhalten können. Sie sollten daher nur an dieser Studie teilnehmen, wenn das für Sie in Ordnung ist. 
+                Diese Studie besteht aus verschiedenen Aufgaben, bei denen Sie Formen betrachten und Wörter lesen, Urteile fällen und einige Fragen zu Ihrer Person beantworten. Dabei interessiert uns neben Ihren Einschätzungen auch das Blickverhalten, während die Aufgaben bearbeitet werden. Bitte beachten Sie, dass eine der Aufgaben das Lesen negativer Wörter beinhaltet, von denen einige sehr unangenehme Bedeutungen haben können. Sie sollten daher nur an dieser Studie teilnehmen, wenn das für Sie in Ordnung ist. 
                 <br><br>
                 Infos zur Einverständniserklärung <br>
                 Datenschutz<br>
@@ -129,6 +129,17 @@
         button_label: 'Weiter',
         require_movement: true,
         labels: ['sehr negativ', 'neutral', 'sehr positiv'],
+    }
+
+
+    const et_introduction = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Das ist ein Platzhalter. Hier kommt später Information zum Eye-Tracking hin!</b>
+            </p>
+        `,
+        choices: ['Weiter'],
     }
 
     const free_sampling_transition = {
@@ -1079,10 +1090,12 @@
     time_line.push(evaluation1);
     if(treatment == "free_sampling") {
         time_line.push(free_sampling_transition);
+        time_line.push(et_introduction);
         time_line.push(free_sampling_introduction);
         time_line.push(free_samplings);
     } else {
         time_line.push(regular_ec_transition);
+        time_line.push(et_introduction);
         time_line.push(regular_ec_introduction);
         time_line.push(regular_ecs);
     }
