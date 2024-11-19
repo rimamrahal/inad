@@ -261,11 +261,26 @@
         free_samplings.timeline.push(free_sampling);
     }
 
-    const regular_ec_introduction = {
+    const regular_ec_transition = {
         type: jsPsychHtmlButtonResponse,
         stimulus: `
             <p>
                 Im Folgenden erfahren Sie mehr darüber, welche positiven oder negativen Eigenschaften mit den farbigen Quadraten verbunden sind. 
+                <br><br>
+                Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
+                <br><br> 
+                Nach jedem Durchgang kehren Sie zur Übersicht aller 6 Quadrate zurück. Insgesamt werden <b>${trials} zufällige Durchgänge</b> gezeigt, in denen Sie etwas über die Eigenschaften der Quadrate erfahren.
+                <b>Bitte beobachten Sie diese Durchgänge aufmerksam.</b>
+            </p>
+        `,
+        choices: ['Weiter'],
+    }
+
+    const regular_ec_introduction = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p>
+                Jetzt geht es mit der eigentlichen Aufgabe los. Hier eine kurze Erinnerung: 
                 <br><br>
                 Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
                 <br><br> 
@@ -447,7 +462,7 @@
         choices: "NO_KEYS",
         stimulus: `
             <p>
-                Während der Durchgänge sind die Quadrate gleichzeitig mit positiven oder negativen Eigenschaftsworte gezeigt worden. <br><br>Ihrer Schätzung nach, wie viele der ${trials} Eigenschaftsworte war positiv bzw. negativ?
+                Während der Durchgänge sind die Quadrate gleichzeitig mit positiven oder negativen Eigenschaftsworte gezeigt worden. <br><br>Ihrer Schätzung nach, wie viele der ${trials} Eigenschaftsworte waren positiv bzw. negativ?
                 <br><br>
                 Anzahl der positiven Eigenschaftsworte: <input id="estimate_positive" name="estimate_positive" type="number" min="0" max="${trials}" style="width:100px;" oninput="checkEstimates()" required /><br>
                 Anzahl der negativen Eigenschaftsworte: <input id="estimate_negative" name="estimate_negative" type="number" min="0" max="${trials}" style="width:100px;" oninput="checkEstimates()" required />
@@ -1059,17 +1074,18 @@
 
     time_line = [];
 
-    // time_line.push(welcome);
-    // time_line.push(evaluation1_intro);
-    // time_line.push(evaluation1);
-    // if(treatment == "free_sampling") {
-    //     time_line.push(free_sampling_transition);
-    //     time_line.push(free_sampling_introduction);
-    //     time_line.push(free_samplings);
-    // } else {
-    //     time_line.push(regular_ec_introduction);
-    //     time_line.push(regular_ecs);
-    // }
+    time_line.push(welcome);
+    time_line.push(evaluation1_intro);
+    time_line.push(evaluation1);
+    if(treatment == "free_sampling") {
+        time_line.push(free_sampling_transition);
+        time_line.push(free_sampling_introduction);
+        time_line.push(free_samplings);
+    } else {
+        time_line.push(regular_ec_transition);
+        time_line.push(regular_ec_introduction);
+        time_line.push(regular_ecs);
+    }
     time_line.push(evaluation2_intro);
     time_line.push(evaluation2);
     time_line.push(estimate);
