@@ -488,7 +488,7 @@
         type: jsPsychHtmlKeyboardResponse,
         choices: "NO_KEYS",
         stimulus: function () {
-            let html = 'Schätzen Sie: Wie oft haben Sie die jeweiligen Quadraten gesehen?<br><br>';
+            let html = 'Schätzen Sie: Wie oft haben Sie die jeweiligen Quadrate gesehen?<br><br>';
             for (let i=0; i<images.length; i++) {
                 html += `
                     <img src="${images[i].image}" style="width:50px; transform: translateY(+25%); margin-right: 50px;" />
@@ -875,8 +875,8 @@
             <p>
                 Während der Durchgänge sind die Quadrate gleichzeitig mit positiven oder negativen Eigenschaftsworte gezeigt worden. <br><br>Ihrer Schätzung nach, wie viele der ${trials/2} Eigenschaftsworte war positiv bzw. negativ?
                 <br><br>
-                Anzahl der positiven Eigenschaftsworte: <input id="estimate_positive" name="estimate_positive" type="number" min="0" max="${trials/2}" style="width:100px;" oninput="checkEstimates()" required /><br>
-                Anzahl der negativen Eigenschaftsworte: <input id="estimate_negative" name="estimate_negative" type="number" min="0" max="${trials/2}" style="width:100px;" oninput="checkEstimates()" required />
+                Anzahl der positiven Eigenschaftsworte: <input id="estimate_positive" name="estimate_positive" type="number" min="0" max="${trials/2}" style="width:100px;" oninput="checkEstimates2()" required /><br>
+                Anzahl der negativen Eigenschaftsworte: <input id="estimate_negative" name="estimate_negative" type="number" min="0" max="${trials/2}" style="width:100px;" oninput="checkEstimates2()" required />
                 <br><br>
                 ACHTUNG! Die Summer beider Zahlen muss ${trials/2} ergeben!
             </p>
@@ -888,23 +888,52 @@
         type: jsPsychHtmlKeyboardResponse,
         choices: "NO_KEYS",
         stimulus: function () {
-            let html = 'Schätzen Sie: Wie oft haben Sie die jeweiligen Quadraten gesehen?<br><br>';
+            let html = 'Schätzen Sie: Wie oft haben Sie die jeweiligen Quadrate gesehen?<br><br>';
             for (let i=0; i<images.length; i++) {
                 html += `
                     <img src="${images[i].image}" style="width:50px; transform: translateY(+25%); margin-right: 50px;" />
-                    <input name="estimate_${i}" type="number" min="0" max="${trials}" style="width:100px;" oninput="checkEstimates()" required /> Durchgänge (0 bis ${trials})<br>
+                    <input name="estimate_${i}" type="number" min="0" max="${trials/2}" style="width:100px;" oninput="checkEstimates2()" required /> Durchgänge (0 bis ${trials/2})<br>
                 `
             }
             html += `
-                <p>ACHTUNG! Die Summer aller Zahlen muss ${trials} ergeben!</p>
+                <p>ACHTUNG! Die Summer aller Zahlen muss ${trials/2} ergeben!</p>
                 <button id="next" class="jspsych-btn" onclick="jsPsych.finishTrial()" disabled>Weiter</button>
             `
             return html;
         },
         on_finish: function(data) {
-            data.estimate_individuals = window.estimate_individuals;
+            data.estimate_individuals2 = window.estimate_individuals2;
         }
     };
+
+    // Function to handle button click
+    function checkEstimates2() {
+        estimates = document.querySelectorAll("input[type=number]");
+        
+        var est = 0;
+
+        let estimate_individuals2 = "";
+
+        for (let i=0; i<estimates.length; i++) {
+            est += parseInt(estimates[i].value);
+            if (parseInt(estimates[i].value) > 0)
+                estimate_individuals2 += 1;
+            else
+                estimate_individuals2 += 0;
+        }
+
+        window.estimate_individuals2 = estimate_individuals2;
+
+        console.log(estimate_individuals2);
+
+        if(est==trials/2) {
+            document.getElementById("next").disabled = false;
+        } else {
+            document.getElementById("next").disabled = true;
+        }
+    }
+
+
 
     const joint_occurence2_intro = {
         type: jsPsychHtmlButtonResponse,
@@ -955,13 +984,13 @@
         sample: {
             type: 'custom',
             fn: function(t){ // return only the indices of the images that were estimated to be shown at least once
-                var indices = [];
+                var indices2 = [];
                 for (let i=0; i<images.length; i++) {
-                    if (jsPsych.data.get().last(2).values()[0].estimate_individuals[i] == '1')
-                        indices.push(i);
+                    if (jsPsych.data.get().last(2).values()[0].estimate_individuals2[i] == '1')
+                        indices2.push(i);
                 }
-                console.log(indices);
-                return indices;
+                console.log(indices2);
+                return indices2;
             }
         }
     }
