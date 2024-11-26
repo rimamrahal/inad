@@ -26,6 +26,7 @@
     const trials = 10;
 
     var count = trials;
+    var word = "";
 
     var treatment = jsPsych.randomization.shuffle(["free_sampling", "regular_ec"])[0];
 
@@ -68,6 +69,36 @@
 
     // Randomize the positions for each subject
     const left_right = jsPsych.randomization.shuffle(['25%','75%']);
+
+    jsPsych.data.addProperties({
+        image1: images[0].image,
+        image2: images[1].image,
+        image3: images[2].image,
+        image4: images[3].image,
+        image5: images[4].image,
+        image6: images[5].image,
+        image1_association: images[0].association,
+        image2_association: images[1].association,
+        image3_association: images[2].association,
+        image4_association: images[3].association,
+        image5_association: images[4].association,
+        image6_association: images[5].association,
+        position1_left: positions[0].left,
+        position1_top: positions[0].top,
+        position2_left: positions[1].left,
+        position2_top: positions[1].top,
+        position3_left: positions[2].left,
+        position3_top: positions[2].top,
+        position4_left: positions[3].left,
+        position4_top: positions[3].top,
+        position5_left: positions[4].left,
+        position5_top: positions[4].top,
+        position6_left: positions[5].left,
+        position6_top: positions[5].top,
+        negative_position: left_right[0],
+        positive_position: left_right[1],
+        treatment: treatment
+    });
 
     const welcome = {
         type: jsPsychHtmlButtonResponse,
@@ -216,6 +247,7 @@
                 on_finish: function (data) {
                     data.clicked_image = window.clicked_image;
                     data.association = window.association;
+                    data.count = count;
                 },
             },
             {
@@ -231,7 +263,7 @@
                     const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
                     let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
                     
-                    const word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
+                    word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
                     const style_word = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(+50px); width: 100px; height: 100px;`;
                     html += `<p style="${style_word}">${word}</p>`
                     used_words[jsPsych.data.get().last(2).values()[0].association].push(word);
@@ -242,6 +274,9 @@
                     if (count == 0)
                         count = trials;
                     trial.stimulus = html;
+                },
+                on_finish: function (data) {
+                    data.word = word;
                 },
                 choices: "NO_KEYS",
                 trial_duration: 2000
@@ -346,6 +381,7 @@
                     rand_id = Math.floor(Math.random() * 6);
                     data.clicked_image = images[rand_id].image;
                     data.association = images[rand_id].association;
+                    data.count = count;
                 },
             },
             {
@@ -361,7 +397,7 @@
                     const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
                     let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
                     
-                    const word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
+                    word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
                     const style_word = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(+50px); width: 100px; height: 100px;`;
                     html += `<p style="${style_word}">${word}</p>`
                     used_words[jsPsych.data.get().last(2).values()[0].association].push(word);
@@ -372,6 +408,9 @@
                     if (count == 0)
                         count = trials;
                     trial.stimulus = html;
+                },
+                on_finish: function (data) {
+                    data.word = word;
                 },
                 choices: "NO_KEYS",
                 trial_duration: 2000
@@ -610,8 +649,6 @@
         choices: ['Weiter'],
     }
 
-    let word = "";
-
     const word_rating = {
         timeline: [
             {
@@ -749,6 +786,7 @@
                     rand_id = Math.floor(Math.random() * 6);
                     data.clicked_image = images[rand_id].image;
                     data.association = images[rand_id].association;
+                    data.count = count;
                 },
             },
             {
@@ -932,8 +970,6 @@
             document.getElementById("next").disabled = true;
         }
     }
-
-
 
     const joint_occurence2_intro = {
         type: jsPsychHtmlButtonResponse,
