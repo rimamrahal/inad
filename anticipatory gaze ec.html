@@ -3,7 +3,8 @@
 
 <head>
     <title>Anticipatory Gaze EC</title>
-    <script src="https://unpkg.com/jspsych@8.0.0"></script>
+    <script src="https://unpkg.com/jspsych@8.0.0"></script>  
+    
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.0.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@2.0.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.0.0"></script>
@@ -12,13 +13,25 @@
     <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@2.0.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@2.0.0"></script>
 
+    <script src="https://cdn.jsdelivr.net/gh/jspsych/jspsych@jspsych@7.0.0/examples/js/webgazer/webgazer.js"></script>
+    <script src="https://unpkg.com/@jspsych/extension-webgazer@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-webgazer-calibrate@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-webgazer-init-camera@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-webgazer-validate@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-fullscreen@2.0.0"></script>
+
+
     <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body></body>
 <script>
-    const jsPsych = initJsPsych();
+    const jsPsych = initJsPsych({
+        extensions: [
+            {type: jsPsychExtensionWebgazer}
+        ]
+    });
 
     var wordlist = [[],[]];
     var used_words = [[],[]];
@@ -49,12 +62,12 @@
 
     // Define the image stimuli and associations
     const images = jsPsych.randomization.shuffle([
-        { image: 'image1.png', association: associations[0] },
-        { image: 'image2.png', association: associations[1] },
-        { image: 'image3.png', association: associations[2] },
-        { image: 'image4.png', association: associations[3] },
-        { image: 'image5.png', association: associations[4] },
-        { image: 'image6.png', association: associations[5] },
+        { image: 'img/image1.png', association: associations[0] },
+        { image: 'img/image2.png', association: associations[1] },
+        { image: 'img/image3.png', association: associations[2] },
+        { image: 'img/image4.png', association: associations[3] },
+        { image: 'img/image5.png', association: associations[4] },
+        { image: 'img/image6.png', association: associations[5] },
     ]);
 
     // Randomize the positions for each subject
@@ -162,16 +175,185 @@
         labels: ['sehr negativ', 'neutral', 'sehr positiv'],
     }
 
-
-    const et_introduction = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: `
-            <p>
-                Das ist ein Platzhalter. Hier kommt später Information zum Eye-Tracking hin!</b>
-            </p>
+    /** full screen **/
+    var fullscreenEnter = {
+        type: jsPsychFullscreen,
+        message: `
+            <div> The study will switch to full screen mode when you press the button below.  <br/>
+            Your webcam will be turned on during the study.<br/>
+            If you do not wish to allow the use of your camera,  close the study page now. <br/>
+            <br><br/>
+            Once the study has started, <b>DO NOT EXIT</b> full screen mode. <br/> 
+            <br><br/>
+            When you are ready to begin, press the button.</div>
         `,
-        choices: ['Weiter'],
+        fullscreen_mode: true,
+        on_finish: function () {
+            document.body.style.cursor = 'none'
+        }
+    };
+
+    var fullscreenEnd = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: false,
+    };
+
+    /*****************************
+    ***********Eye tracking ***********
+    *****************************/
+
+    var cali_points = [[20,20],[20,80],[80,20], [50,50],[20,50],[50,20],[80,80],[80,50],[50,80]];
+    var point_size = 50;
+    var threshold = 0.7;
+    var recalibrate_criterion = 0.2;
+    var calibration_mode = 'view';
+
+    var eyeTrackingInstruction1 = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+            <div> <font size=120%; font color = 'green';>Calibration & Validation </font><br/>
+            <br><br/>
+            Before we begin with the study, we need to turn on and adjust your webcam for eye-tracking.   
+            <br/>
+            There are two parts to this process. The first part is calibration and the second part is validation.<br/>
+            <br><br/>
+            During calibration, you will see a series of dots like this <span id="calibration_dot_instruction"></span> appear on the screen, each for 2 seconds. <br/>
+            Your task is simply to stare directly at each dot until it disappears.<br/>
+            Then, quickly move your eyes to the next dot and repeat.<br/>
+            <br><br/>
+            Validation is basically the same as calibration. You simply need to stare at each dot until it disappears.<br/>
+            <br><br/>
+            When you are ready, press the <b>SPACE BAR</b> to continue. </div>
+        `,
+        post_trial_gap: 500,
+        choices: [' '],
+
     }
+
+    var eyeTrackingNote = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+            <div><font size=120%; font color = 'green';> Calibration & Validation</font><br/>
+            <br><br>
+            <font size = 5px font color = "darkred">There are several <b>IMPORTANT</b> tips that are useful for passing the calibration task:<br/></font>
+            <img height="200px" width="1000px" src="img/instruct1.png"><br/>
+            <br><br>
+            <div style="text-align-last:left">
+                In addition to the tips in the figure: <br>
+                (1). Use your eyes to look around the screen and try to avoid moving your head. <br/>
+                (2). Try to keep lights in front of you rather than behind you so that the webcam can clearly see your face. Avoid sitting with a window behind you. <br/>
+                (3). After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/>
+            </div>
+            <br><br/>
+            <br><br/>
+            <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to continue </font></div>
+        `,
+        post_trial_gap: 500,
+        choices: [' '],
+    }
+
+
+    var calibrationInstruction= {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+            <div>
+                It may take up to 30 seconds for the camera to initialize. <br/>
+                <br><br/>
+                When you are ready, press the <b>SPACE BAR</b> to bring up the video feed.  
+            </div>
+        `,
+        post_trial_gap: 500,
+        choices: [' '],
+        on_finish: () => document.body.style.cursor = 'pointer',
+    }
+
+
+
+    var init_camera = {
+        type: jsPsychWebgazerInitCamera,
+        on_finish: function() {
+            if (calibration_mode == 'view') {
+                document.body.style.cursor = 'none';
+            }
+        }
+    };
+
+
+    var calibration = {
+        type: jsPsychWebgazerCalibrate,
+        calibration_points: cali_points,
+        calibration_mode: calibration_mode,
+        point_size: point_size,
+        time_per_point: 2000,
+        repetitions_per_point: 1,
+        randomize_calibration_order: true,
+        test_mode:true,
+    }
+
+    var validationInstruction = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus:`
+            <div>  Now we'll measure the accuracy of the calibration. <br/>
+            <br><br/>
+            When you are ready, press the <b>SPACE BAR</b> to begin the validation. </div>
+        `,
+        choices: [' '],
+        post_trial_gap: 1000,
+        on_finish: () =>  document.body.style.cursor = 'none',
+    }
+    
+
+    var validation = {
+        type: jsPsychWebgazerValidate,
+        validation_points: cali_points, 
+        roi_radius: 200,
+        time_to_saccade: 1000,
+        validation_duration: 2000,
+        point_size: point_size,
+        show_validation_data: false,
+        dot_threshold: threshold,
+        data: {
+            task: 'validate'
+        },
+        on_finish: () => document.body.style.cursor = 'pointer',
+    }
+
+
+    var recalibrateInstruction = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+            <p>The accuracy of the calibration is a little lower than we'd like.</p>
+            <p>Let's try calibrating one more time.</p>
+            <br></br>
+            <p>When you are ready, press the <b>SPACE BAR</b> to recalibrate.  </p>
+        `,
+        choices: [' '],
+    }
+
+
+    var recalibrate = {
+        timeline: [recalibrateInstruction, calibration, validationInstruction, validation],
+        conditional_function: function(){
+            var validation_data = jsPsych.data.get().filter({task: 'validate'}).values()[0];
+            var below_threshold_count = validation_data.percent_in_roi.filter(function(x) {
+                var minimum_percent_acceptable = threshold;
+                return x < minimum_percent_acceptable}).length;
+        
+                return below_threshold_count/cali_points.length >= recalibrate_criterion;
+
+            // return validation_data.percent_in_roi.some(function(x){
+            //   var minimum_percent_acceptable = threshold;
+            //   return x < minimum_percent_acceptable;
+            // });
+        },
+        data: {
+            phase: 'recalibration'
+        }
+    }
+
+    /*****************************
+    *********** Experiment ***********
+    *****************************/
 
     const free_sampling_transition = {
         type: jsPsychHtmlButtonResponse,
@@ -930,11 +1112,11 @@
             for (let i=0; i<images.length; i++) {
                 html += `
                     <img src="${images[i].image}" style="width:50px; transform: translateY(+25%); margin-right: 50px;" />
-                    <input name="estimate_${i}" type="number" min="0" max="${trials/2}" style="width:100px;" oninput="checkEstimates2()" required /> Durchgänge (0 bis ${trials/2})<br>
+                    <input name="estimate_${i}" type="number" min="0" max="${trials}" style="width:100px;" oninput="checkEstimateIndividuals2()" required /> Durchgänge (0 bis ${trials})<br>
                 `
             }
             html += `
-                <p>ACHTUNG! Die Summer aller Zahlen muss ${trials/2} ergeben!</p>
+                <p>ACHTUNG! Die Summer aller Zahlen muss ${trials} ergeben!</p>
                 <button id="next" class="jspsych-btn" onclick="jsPsych.finishTrial()" disabled>Weiter</button>
             `
             return html;
@@ -965,6 +1147,33 @@
         console.log(estimate_individuals2);
 
         if(est==trials/2) {
+            document.getElementById("next").disabled = false;
+        } else {
+            document.getElementById("next").disabled = true;
+        }
+    }
+
+    // Function to handle button click
+    function checkEstimateIndividuals2() {
+        estimates = document.querySelectorAll("input[type=number]");
+        
+        var est = 0;
+
+        let estimate_individuals2 = "";
+
+        for (let i=0; i<estimates.length; i++) {
+            est += parseInt(estimates[i].value);
+            if (parseInt(estimates[i].value) > 0)
+                estimate_individuals2 += 1;
+            else
+                estimate_individuals2 += 0;
+        }
+
+        window.estimate_individuals2 = estimate_individuals2;
+
+        console.log(estimate_individuals2);
+
+        if(est==trials) {
             document.getElementById("next").disabled = false;
         } else {
             document.getElementById("next").disabled = true;
@@ -1148,19 +1357,35 @@
         `,
     }
 
+
+    //  // link to the backend
+    var show_data = {
+        type: jsPsychHtmlKeyboardResponse,
+        on_start: () =>  jsPsych.data.get().localSave('json','mydata.json'),
+        stimulus: function() {
+            var trial_data = jsPsych.data.get().values();
+            var trial_json = JSON.stringify(trial_data, null, 2);
+            return `
+                <p style="margin-bottom:0px;"><strong>Trial data:</strong></p>
+                <pre style="margin-top:0px;text-align:left;">${trial_json}</pre>
+            `;
+        },
+        choices: "NO_KEYS",
+    
+    };
+
     time_line = [];
 
     time_line.push(welcome);
     time_line.push(evaluation1_intro);
     time_line.push(evaluation1);
+    time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote, calibrationInstruction,init_camera,calibration,validationInstruction, validation,recalibrate)
     if(treatment == "free_sampling") {
         time_line.push(free_sampling_transition);
-        time_line.push(et_introduction);
         time_line.push(free_sampling_introduction);
         time_line.push(free_samplings);
     } else {
         time_line.push(regular_ec_transition);
-        time_line.push(et_introduction);
         time_line.push(regular_ec_introduction);
         time_line.push(regular_ecs);
     }
@@ -1183,6 +1408,7 @@
     time_line.push(word_rating2_intro);
     time_line.push(word_ratings2);
     time_line.push(demographics);
+    time_line.push(fullscreenEnd,show_data);
     time_line.push(end);
 
     jsPsych.run([time_line]);
