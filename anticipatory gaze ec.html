@@ -431,6 +431,12 @@
                     data.association = window.association;
                     data.count = count;
                 },
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#img-0','#img-1','#img-2','#img-3','#img-4','#img-5']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -443,7 +449,7 @@
                 stimulus: ``,
                 on_start: function (trial) {
                     const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
-                    let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
+                    let html = `<img style="${style_image}" id="square" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
                     
                     word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
                     const style_word = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(+50px); width: 100px; height: 100px;`;
@@ -461,7 +467,13 @@
                     data.word = word;
                 },
                 choices: "NO_KEYS",
-                trial_duration: 2000
+                trial_duration: 2000,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#square']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -565,6 +577,12 @@
                     data.association = images[rand_id].association;
                     data.count = count;
                 },
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#img-0','#img-1','#img-2','#img-3','#img-4','#img-5']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -577,7 +595,7 @@
                 stimulus: ``,
                 on_start: function (trial) {
                     const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
-                    let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
+                    let html = `<img style="${style_image}" id="square" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
                     
                     word = wordlist[jsPsych.data.get().last(2).values()[0].association].pop();
                     const style_word = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(+50px); width: 100px; height: 100px;`;
@@ -595,7 +613,13 @@
                     data.word = word;
                 },
                 choices: "NO_KEYS",
-                trial_duration: 2000
+                trial_duration: 2000,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#square']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -970,6 +994,12 @@
                     data.association = images[rand_id].association;
                     data.count = count;
                 },
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#img-0','#img-1','#img-2','#img-3','#img-4','#img-5']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -982,7 +1012,7 @@
                 stimulus: ``,
                 on_start: function (trial) {
                     const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
-                    let html = `<img style="${style_image}" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
+                    let html = `<img style="${style_image}" id="square" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
                     
                     count --;
                     if (count == 0)
@@ -990,7 +1020,13 @@
                     trial.stimulus = html;
                 },
                 choices: "NO_KEYS",
-                trial_duration: 2000
+                trial_duration: 2000,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#square']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
