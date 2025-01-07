@@ -132,8 +132,13 @@
         type: jsPsychHtmlButtonResponse,
         stimulus: `
             <p>
-                Im Folgenden bitten wir Sie, farbige Quadrate zu beurteilen. 
+               
+                Im Alltag bewerten wir ständig unterschiedlichste Dinge – sei es Produkte, Situationen oder Personen. Diese Studie zielt darauf ab, besser zu verstehen, wie solche Bewertungen entstehen. 
                 
+                <br><br>
+                
+                Im Folgenden bitten wir Sie daher, farbige Quadrate zu beurteilen. 
+
                 <br><br>
 
                 Sie werden nun 6 Quadrate in verschiedenen Farben sehen. Geben Sie bitte an, wie positiv oder negativ Ihre emotionalen Reaktionen auf die farbigen Quadrate sind. 
@@ -154,7 +159,7 @@
                 stimulus: function () {
                     const html = `
                         <p>
-                            Wie positiv oder negativ ist Ihr Eindruck des Quadrats in dieser Farbe?
+                            Wie positiv oder negativ ist das Gefühl, das das Quadrat in dieser Farbe bei Ihnen auslöst?
                         </p>
                         <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;">
                     `
@@ -179,13 +184,13 @@
     var fullscreenEnter = {
         type: jsPsychFullscreen,
         message: `
-            <div> The study will switch to full screen mode when you press the button below.  <br/>
-            Your webcam will be turned on during the study.<br/>
-            If you do not wish to allow the use of your camera,  close the study page now. <br/>
-            <br><br/>
-            Once the study has started, <b>DO NOT EXIT</b> full screen mode. <br/> 
-            <br><br/>
-            When you are ready to begin, press the button.</div>
+          <div> 
+          Für diese Studie ist es notwendig in den Vollbildmodus, zu wechseln. Dies geschieht, wenn Sie unten auf den Button klicken. <br/> 
+          Ihre Webcam wird während der Studie eingeschaltet. <br/> Wenn Sie die Nutzung Ihrer Kamera nicht erlauben möchten, schließen Sie jetzt die Seite der Studie. <br/> 
+          <br><br/> 
+          Sobald die Studie gestartet ist, <b>VERLASSEN SIE NICHT</b> den Vollbildmodus. <br/> 
+          <br><br/> 
+          Wenn Sie bereit sind zu beginnen, klicken Sie auf den Button.</div>
         `,
         fullscreen_mode: true,
         on_finish: function () {
@@ -211,19 +216,18 @@
     var eyeTrackingInstruction1 = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            <div> <font size=120%; font color = 'green';>Calibration & Validation </font><br/>
+            <div> <font size=120%; font color = 'green';>Kalibrierung & Validierung </font><br/>
             <br><br/>
-            Before we begin with the study, we need to turn on and adjust your webcam for eye-tracking.   
-            <br/>
-            There are two parts to this process. The first part is calibration and the second part is validation.<br/>
-            <br><br/>
-            During calibration, you will see a series of dots like this <span id="calibration_dot_instruction"></span> appear on the screen, each for 2 seconds. <br/>
-            Your task is simply to stare directly at each dot until it disappears.<br/>
-            Then, quickly move your eyes to the next dot and repeat.<br/>
-            <br><br/>
-            Validation is basically the same as calibration. You simply need to stare at each dot until it disappears.<br/>
-            <br><br/>
-            When you are ready, press the <b>SPACE BAR</b> to continue. </div>
+             Bevor wir mit der nächsten Aufgabe beginnen, müssen wir Ihre Webcam für das Eye-Tracking aktivieren und einstellen. <br/> 
+             Dieser Prozess besteht aus zwei Teilen: Der erste Teil ist die Kalibrierung, der zweite Teil die Validierung. <br/> 
+             <br><br/> 
+             Während der Kalibrierung werden Sie eine Reihe von Punkten wie diesen <span id="calibration_dot_instruction"></span> auf dem Bildschirm sehen, jeweils für 2 Sekunden. <br/> 
+             Ihre Aufgabe besteht darin, jeden Punkt direkt anzusehen, bis er verschwindet. <br/> 
+             Schauen Sie dann  zum nächsten Punkt und wiederholen Sie den Vorgang. <br/> 
+             <br><br/> 
+             Die Validierung funktioniert im Grunde genauso wie die Kalibrierung. Sie müssen einfach jeden Punkt ansehen, bis er verschwindet. <br/> 
+             <br><br/> 
+             Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.  </div>
         `,
         post_trial_gap: 500,
         choices: [' '],
@@ -235,18 +239,17 @@
         stimulus: `
             <div><font size=120%; font color = 'green';> Calibration & Validation</font><br/>
             <br><br>
-            <font size = 5px font color = "darkred">There are several <b>IMPORTANT</b> tips that are useful for passing the calibration task:<br/></font>
-            <img height="200px" width="1000px" src="img/instruct1.png"><br/>
-            <br><br>
-            <div style="text-align-last:left">
-                In addition to the tips in the figure: <br>
-                (1). Use your eyes to look around the screen and try to avoid moving your head. <br/>
-                (2). Try to keep lights in front of you rather than behind you so that the webcam can clearly see your face. Avoid sitting with a window behind you. <br/>
-                (3). After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/>
+            <font size = 5px font color = "darkred">Es gibt mehrere <b>WICHTIGE</b> Tipps, die Ihnen helfen, die Kalibrierungsaufgabe erfolgreich zu absolvieren:<br/></font> 
+            <img height="200px" width="1000px" src="img/instruct1.png"><br/> 
+            <br><br> 
+            <div style="text-align-last:left"> Zusätzlich zu den Tipps in der Abbildung: <br> 
+            (1). Verwenden Sie Ihre Augen, um sich auf dem Bildschirm umzusehen, und versuchen Sie, Kopfbewegungen zu vermeiden. <br/> 
+            (2). Stellen Sie sicher, dass Lichtquellen vor Ihnen und nicht hinter Ihnen sind, damit die Webcam Ihr Gesicht klar erkennen kann. Vermeiden Sie z.B. eine Fenster hinter sich. <br/> 
+            (3). Nachdem Sie diese Anpassungen vorgenommen haben, überprüfen Sie erneut, ob Ihr Gesicht gut in das Kästchen im Videobild passt und dass das Kästchen grün ist.<br/>
             </div>
             <br><br/>
             <br><br/>
-            <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to continue </font></div>
+            <font size=5px; >Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.</font></div>
         `,
         post_trial_gap: 500,
         choices: [' '],
@@ -257,9 +260,9 @@
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
             <div>
-                It may take up to 30 seconds for the camera to initialize. <br/>
+                Es kann bis zu 30 Sekunden dauern, bis die Kamera initialisiert ist. <br/>
                 <br><br/>
-                When you are ready, press the <b>SPACE BAR</b> to bring up the video feed.  
+                Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.
             </div>
         `,
         post_trial_gap: 500,
@@ -293,9 +296,9 @@
     var validationInstruction = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus:`
-            <div>  Now we'll measure the accuracy of the calibration. <br/>
+            <div>  Nun messen wir die Genauigkeit der Kalibrierung. <br/>
             <br><br/>
-            When you are ready, press the <b>SPACE BAR</b> to begin the validation. </div>
+            Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren. </div>
         `,
         choices: [' '],
         post_trial_gap: 1000,
@@ -322,10 +325,10 @@
     var recalibrateInstruction = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            <p>The accuracy of the calibration is a little lower than we'd like.</p>
-            <p>Let's try calibrating one more time.</p>
+            <p>Die Genauigkeit der Kalibrierung ist etwas niedriger als für diese Studie notwendig.</p>
+            <p>Versuchen wir es noch einmal mit der Kalibrierung.</p>
             <br></br>
-            <p>When you are ready, press the <b>SPACE BAR</b> to recalibrate.  </p>
+            <p>Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.  </p>
         `,
         choices: [' '],
     }
@@ -648,7 +651,7 @@
                 Sie werden nun alle 6 Quadrate einzeln sehen. Geben Sie bitte an, wie <b>positiv oder negativ</b> Ihre emotionalen Reaktionen auf das jeweilige Quadrat ist. 
                 Dabei gibt es wie zuvor keine richtigen oder falschen Antworten. Es kommt uns nur auf Ihre persönliche Einschätzung an. 
                 <br><br>
-                Dieses Mal geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Geben Sie an, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
+                Dieses Mal geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Orientieren Sie sich dabei daran, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
             </p>
         `,
         choices: ['Weiter'],
@@ -661,7 +664,7 @@
                 stimulus: function () {
                     const html = `
                         <p>
-                            Wie positiv oder negativ ist Ihr Eindruck des Quadrats in dieser Farbe?
+                            Wie positiv oder negativ ist das Gefühl, das das Quadrat in dieser Farbe bei Ihnen auslöst?
                         </p>
                         <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;">
                     `
@@ -844,11 +847,11 @@
             <p>
                 Nun bewerten Sie die Eigenschaftsworte, die den Quadraten zugeordnet wurden. 
                 <br><br>
-                Geben Sie bitte an, wie <b>positiv oder negativ</b> Sie Ihre emotionale Reaktionen auf das entsprechende Eigenschaftswort sind.. 
+                Geben Sie bitte an, wie <b>positiv oder negativ</b> Sie Ihre emotionale Reaktionen auf das entsprechende Eigenschaftswort sind. 
                 <br><br>
                 Dabei gibt es wie zuvor keine richtigen oder falschen Antworten. Es kommt uns nur auf Ihre persönliche Einschätzung an. 
                 <br><br>
-                Geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Geben Sie an, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
+                Geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Orientieren Sie sich dabei daran, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
 
             </p>
         `,
@@ -1059,7 +1062,7 @@
                 Sie werden nun alle 6 Quadrate einzeln sehen. Geben Sie bitte an, wie <b>positiv oder negativ</b> Ihre emotionalen Reaktionen auf das jeweilige Quadrat ist. 
                 Dabei gibt es wie zuvor keine richtigen oder falschen Antworten. Es kommt uns nur auf Ihre persönliche Einschätzung an. 
                 <br><br>
-                Dieses Mal geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Geben Sie an, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
+                Dieses Mal geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Orientieren Sie sich dabei daran, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
             </p>
         `,
         choices: ['Weiter'],
@@ -1072,7 +1075,7 @@
                 stimulus: function () {
                     const html = `
                         <p>
-                            Wie positiv oder negativ ist Ihr Eindruck des Quadrats in dieser Farbe?
+                            Wie positiv oder negativ ist das Gefühl, das das Quadrat in dieser Farbe bei Ihnen auslöst?
                         </p>
                         <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;">
                     `
@@ -1286,7 +1289,7 @@
                 <br><br>
                 Dabei gibt es wie zuvor keine richtigen oder falschen Antworten. Es kommt uns nur auf Ihre persönliche Einschätzung an. 
                 <br><br>
-                Geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Geben Sie an, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
+                Geben Sie bitte außerdem an, wie <b>sicher</b> Sie sich bei Ihren einzelnen Einschätzungen sind. Orientieren Sie sich dabei daran, wie lange Sie bei der Entscheidung nachdenken mussten bzw. wie viel Zeit Sie dafür gebraucht haben.
 
             </p>
         `,
