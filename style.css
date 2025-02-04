@@ -33,3 +33,11 @@
   left: 0px !important;
   top: 0px !important;
 }
+
+#webgazer-validate-container {
+  position: absolute !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  left: 0px !important;
+  top: 0px !important;
+}

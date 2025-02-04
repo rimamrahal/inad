@@ -211,7 +211,7 @@
     var eyeTrackingInstruction1 = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            <div> <font size=120%; font color = 'green';>Calibration & Validation </font><br/>
+            <div> <font size=120%; font color = 'green';>Webcam Calibration & Validation </font><br/>
             <br><br/>
             Before we begin with the study, we need to turn on and adjust your webcam for eye-tracking.   
             <br/>
@@ -230,10 +230,22 @@
 
     }
 
+    var eyeTrackingInstruction2 = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+            We now need to calibrate again.
+            <br><br/>
+            When you are ready, press the <b>SPACE BAR</b> to continue. </div>
+        `,
+        post_trial_gap: 500,
+        choices: [' '],
+
+    }
+
     var eyeTrackingNote = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            <div><font size=120%; font color = 'green';> Calibration & Validation</font><br/>
+            <div><font size=120%; font color = 'green';>Webcam Calibration & Validation</font><br/>
             <br><br>
             <font size = 5px font color = "darkred">There are several <b>IMPORTANT</b> tips that are useful for passing the calibration task:<br/></font>
             <img height="200px" width="1000px" src="img/instruct1.png"><br/>
@@ -400,19 +412,37 @@
                     return html;
                 },
                 choices: "NO_KEYS",
-                trial_duration: 2000
+                trial_duration: 2000,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: `+`,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -442,7 +472,13 @@
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -479,7 +515,13 @@
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
         ]
     }
@@ -498,6 +540,9 @@
     };
 
     for (let i=0; i<trials; i++) {
+        if (i == trials/2) {
+            free_samplings.timeline.push(eyeTrackingInstruction2,calibration)
+        }
         free_samplings.timeline.push(free_sampling);
     }
 
@@ -544,19 +589,37 @@
                     return html;
                 },
                 choices: "NO_KEYS",
-                trial_duration: 2000
+                trial_duration: 2000,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: `+`,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -588,7 +651,13 @@
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -625,7 +694,13 @@
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
         ]
     }
@@ -636,6 +711,9 @@
     };
 
     for (let i=0; i<trials; i++) {
+        if (i == trials/2) {
+            regular_ecs.timeline.push(eyeTrackingInstruction2,calibration)
+        }
         regular_ecs.timeline.push(regular_ec);
     }
 
@@ -675,7 +753,7 @@
                 preamble: function () {
                     const html = `
                         <p>
-                            "Wie sicher sind Sie sich bei Ihrer Einschätzung dieses Quadrats?"
+                            Wie sicher sind Sie sich bei Ihrer Einschätzung dieses Quadrats?
                         <p>
                         <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;">
                     `
@@ -961,19 +1039,37 @@
                     return html;
                 },
                 choices: "NO_KEYS",
-                trial_duration: 2000
+                trial_duration: 2000,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: `+`,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -1005,7 +1101,13 @@
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
             {
                 type: jsPsychHtmlKeyboardResponse,
@@ -1032,7 +1134,13 @@
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: ``,
                 choices: "NO_KEYS",
-                trial_duration: 500
+                trial_duration: 500,
+                extensions: [
+                    {
+                        type: jsPsychExtensionWebgazer, 
+                        params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+                    }
+                ],
             },
         ]
     }
@@ -1045,6 +1153,8 @@
     for (let i=0; i<trials/2; i++) {
         regular_plus_extinction_ecs.timeline.push(regular_ec);
     }
+
+    regular_plus_extinction_ecs.timeline.push(eyeTrackingInstruction2,calibration)
 
     for (let i=0; i<trials/2; i++) {
         regular_plus_extinction_ecs.timeline.push(extinction_ec);
@@ -1086,7 +1196,7 @@
                 preamble: function () {
                     const html = `
                         <p>
-                            "Wie sicher sind Sie sich bei Ihrer Einschätzung dieses Quadrats?"
+                            Wie sicher sind Sie sich bei Ihrer Einschätzung dieses Quadrats?
                         <p>
                         <img src="${jsPsych.evaluateTimelineVariable('image')}" style="width: 200px; height: 200px;">
                     `
@@ -1415,13 +1525,14 @@
     time_line.push(welcome);
     time_line.push(evaluation1_intro);
     time_line.push(evaluation1);
-    time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote, calibrationInstruction,init_camera,calibration,validationInstruction, validation,recalibrate)
     if(treatment == "free_sampling") {
         time_line.push(free_sampling_transition);
+        time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote, calibrationInstruction,init_camera,calibration,validationInstruction, validation,recalibrate)
         time_line.push(free_sampling_introduction);
         time_line.push(free_samplings);
     } else {
         time_line.push(regular_ec_transition);
+        time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote, calibrationInstruction,init_camera,calibration,validationInstruction, validation,recalibrate)
         time_line.push(regular_ec_introduction);
         time_line.push(regular_ecs);
     }
@@ -1433,6 +1544,7 @@
     time_line.push(joint_occurence);
     time_line.push(word_rating_intro);
     time_line.push(word_ratings);
+    time_line.push(eyeTrackingNote,calibration,validationInstruction,validation,recalibrate)
     time_line.push(regular_ec_extinction_introduction);
     time_line.push(regular_plus_extinction_ecs);
     time_line.push(evaluation3_intro);
