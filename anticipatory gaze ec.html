@@ -12,6 +12,7 @@
     <script src="https://unpkg.com/@jspsych/plugin-survey-likert@2.0.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@2.0.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@2.0.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.0.0"></script>
 
     <script src="https://cdn.jsdelivr.net/gh/jspsych/jspsych@jspsych@7.0.0/examples/js/webgazer/webgazer.js"></script>
     <script src="https://unpkg.com/@jspsych/extension-webgazer@1.1.0"></script>
@@ -116,24 +117,163 @@
     const welcome = {
         type: jsPsychHtmlButtonResponse,
         stimulus: `
-            <div style="font-size:40px">Willkommen zur Studie!</div>
-            <p>
-                Diese Studie besteht aus verschiedenen Aufgaben, bei denen Sie Formen betrachten und Wörter lesen, Urteile fällen und einige Fragen zu Ihrer Person beantworten. Dabei interessiert uns neben Ihren Einschätzungen auch das Blickverhalten, während die Aufgaben bearbeitet werden. Bitte beachten Sie, dass eine der Aufgaben das Lesen negativer Wörter beinhaltet, von denen einige sehr unangenehme Bedeutungen haben können. Sie sollten daher nur an dieser Studie teilnehmen, wenn das für Sie in Ordnung ist. 
-                <br><br>
-                Infos zur Einverständniserklärung <br>
-                Datenschutz<br>
-                Freiwilligkeit, etc.<br>
-            </p>
+            <div id="top-bar">
+             <img src="img/logoHD.png" alt="Logo Heidelberg University"  height="100px">
+
+           </div>
+            <div id="content" align="left">
+  <p>
+    Dies ist eine Studie des Psychologischen Instituts der Universität Heidelberg. 
+    Ziel ist es, zu verstehen, welche Prozesse positiven und negativen Einschätzungen von Objekten zugrunde liegen. 
+  </p>
+  <h3>Kann ich teilnehmen?</h3>
+  <p>Jeder, der die Studie ohne Brille absolvieren kann, kann teilnehmen. 
+    Die Studie wird auf Deutsch durchgeführt, und Sie können teilnehmen, wenn Sie gut Deutsch verstehen. 
+    Sie benötigen einen Computer (Laptop oder Desktop, keine Tablets oder Handys) mit Webcam, um teilnehmen zu können.
+  </p>
+  <h3>Was kann ich erwarten, wenn ich an dieser Studie teilnehme?</h3>
+  <p>
+    Die Studie dauert ungefähr 80 Minuten. 
+    Für Ihre Teilnahme erhalten Sie 1.5 Versuchspersonenstunden. 
+  </p>
+  <h4>Allgemeine Informationen</h4>
+  <p>
+    Es werden Fragen zu persönlichen Einstellungen, Einschätzungen und demografischen Informationen gestellt. Wir fragen jedoch nicht nach Ihrem Namen oder sensiblen 
+    biografischen Daten. Alle von Ihnen bereitgestellten Informationen sind vollständig anonym. Ihre Daten werden 
+    vom System zufällig mit einer Teilnehmernummer versehen.
+  </p>
+
+  <h4>Eye-Tracking</h4>
+  <p>Diese Studie verwendet Ihre Webcam für Eye-Tracking. Die aufgezeichneten Daten zeigen, 
+    wohin Sie auf Ihrem Bildschirm schauen. Es wird KEIN Video von Ihnen an uns gesendet. 
+    Die Daten bestehen nur aus zwei Zahlen, die die Position Ihres Blicks auf dem Bildschirm angeben. 
+    Wir zeichnen weder Ihren Bildschirm noch Videomaterial von Ihnen auf.
+  </p>
+  <p>Um teilzunehmen, müssen Sie der Nutzung Ihrer Kamera im nächsten Bildschirm zustimmen. Wenn Sie nicht möchten, dass die Kamera verwendet wird, schließen Sie bitte diese Seite.</p>
+  
+  <h3>Was sollte ich über meine Teilnahme an dieser Studie wissen?</h3>
+  <ul>
+    <li>Sie entscheiden freiwillig, ob Sie teilnehmen möchten.</li>
+    <li>Nach unserem Wissen sind mit der Teilnahme an dieser Studie keine Risiken verbunden.</li>
+    <li>Sie können die Teilnahme jederzeit beenden.</li>
+    <li>Ihre Entscheidungen werden nicht gegen Sie verwendet.</li>
+    <li>Es entstehen Ihnen keine negativen Konsequenzen, wenn Sie sich entscheiden, die Teilnahme abzubrechen.</li>
+    <li>Zur Sicherung der Transparenz wissenschaftlicher 
+      Erkenntnisse wird der vollständig anonymisierte Datensatz veröffentlicht und anderen Forschern zur Verfügung gestellt. 
+      Bitte beachten Sie, dass die möglichen Zwecke zukünftiger Analysen der Daten nicht vorhersehbar sind.
+    </li>
+  </ul>  
+  <h3>Mit wem kann ich sprechen?</h3>
+  <p>
+    Wenn Sie Fragen, Bedenken oder Beschwerden haben oder der Meinung sind, dass Ihnen durch diese Studien ein Schaden entstanden ist, 
+    kontaktieren Sie bitte Pernilla Bandick via <a href="mailto:pernilla.bandick@stud.uni-heidelberg.de">pernilla.bandick@stud.uni-heidelberg.de</a>.   
+  </p>
+</div>
+
         `,
-        choices: ['Weiter'],
+        choices: ['Ich <b>STIMME ZU</b> und möchte teilnehmen.'],
     }
+
+    const glasses_screening = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+          <p> In der aktuellen Studie ist eines unserer Ziele, Augenbewegungen zu untersuchen. 
+              <br>Brillen machen dies oft unmöglich, da es zu Reflexionen auf den Gläsern kommt. 
+              <br>Sie können daher nur teilnehmen, wenn Sie KEINE Brille tragen. 
+              <br>Es ist in Ordnung teilzunehmen, wenn Sie Ihre Brille jetzt abnehmen können und trotzdem sehr kleinen Text auf dem Bildschirm lesen können.
+              <br><br> <div style="font-size: 10px !important;">Wenn Sie dies OHNE Brille nicht lesen können, können Sie nicht teilnehmen!</div> 
+              <br><br>Bitte seien Sie ehrlich und geben Sie unten an, ob Sie teilnehmen können oder nicht.  
+              <br><br><br>Bitte bestätigen Sie, dass Sie keine Brille tragen und an dieser Studie teilnehmen können.</p>
+        `,
+choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht teilnehmen.'],
+      required: true,
+      on_finish: function(data) {
+          // Check if the answer is "Cannot take part"
+          if (data.response === 1) {  // 0 corresponds to the first button ("Yes")
+              // If they are wearing glasses, redirect and end the experiment
+              window.location.href = "https://www.psychologie.uni-heidelberg.de";  // Redirect to 
+          } else {
+              // Otherwise, continue with the experiment
+              console.log("Participant chose no glasses, continuing the experiment.");
+          }
+      },
+      data: {
+        name: 'glasses_screening'
+      }
+  };
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//Emotion Regulation Questionnaire ////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+       // Define the Likert scale labels
+       var ERQ_scale_labels = [
+     "1 <br> stimmt überhaupt nicht",
+     "2 <br>   ",
+     "3 <br>  ",
+     "4 <br>  neutral",
+     "5 <br>  ",
+     "6 <br>  ",
+     "7 <br>  stimmt vollkommen"
+   ];
+
+   var ERQ_pageone = {
+    type: jsPsychSurveyLikert,
+    preamble:`
+     <p>Wir möchten Ihnen zu Beginn gerne einige Fragen zu Ihren Gefühlen stellen. 
+        Uns interessiert, wie Sie Ihre Gefühle unter Kontrolle halten, bzw. regulieren. 
+        Zwei Aspekte Ihrer Gefühle interessieren uns dabei besonders. 
+        Einerseits ist dies Ihr emotionales Erleben, also was Sie innen fühlen. 
+        Andererseits geht es um den emotionalen Ausdruck, also wie Sie Ihre Gefühle verbal, 
+        gestisch oder im Verhalten nach außen zeigen. <br>
+        <br>
+        Obwohl manche der Fragen ziemlich ähnlich klingen, unterscheiden sie sich in wesentlichen Punkten.<br>
+        Bitte beantworten Sie die Fragen, indem Sie die Antwortmöglichkeiten anklicken.
+        </p>
+    `,
+     questions: [
+      {prompt: "Wenn ich mehr positive Gefühle (wie Freude oder Heiterkeit) empfinden möchte, ändere ich, woran ich denke.", name: 'ERQ1', labels: ERQ_scale_labels, required: true},
+      {prompt: "Ich behalte meine Gefühle für mich.", name: 'ERQ2', labels: ERQ_scale_labels, required: true},
+      {prompt: "Wenn ich weniger negative Gefühle (wie Traurigkeit oder Ärger) empfinden möchte, ändere ich, woran ich denke.", name: 'ERQ3', labels: ERQ_scale_labels, required: true},
+      ],
+    randomize_question_order: false, 
+    button_label: "Weiter" ,
+  };
+
+  var ERQ_pagetwo= {
+    type: jsPsychSurveyLikert,
+    preamble: "Bitte beantworten Sie die weiteren Fragen, indem Sie die Antwortmöglichkeiten anklicken.",
+    questions: [
+      {prompt: "Wenn ich positive Gefühle empfinde, bemühe ich mich, sie nicht nach außen zu zeigen.", name: 'ERQ4', labels: ERQ_scale_labels, required: true},
+      {prompt: "Wenn ich in eine stressige Situation gerate, ändere ich meine Gedanken über die Situation so, dass es mich beruhigt.", name: 'ERQ5', labels: ERQ_scale_labels, required: true},
+      {prompt: "Ich halte meine Gefühle unter Kontrolle, indem ich sie nicht nach außen zeige.", name: 'ERQ6', labels: ERQ_scale_labels, required: true},
+      {prompt: "Wenn ich mehr positive Gefühle empfinden möchte, versuche ich über die Situation anders zu denken.", name: 'ERQ7', labels: ERQ_scale_labels, required: true},
+    ],
+    randomize_question_order: false, 
+    button_label: "Weiter" ,
+  };
+
+
+  var ERQ_pagethree = {
+    type: jsPsychSurveyLikert,
+    preamble: "Bitte beantworten Sie die weiteren Fragen, indem Sie die Antwortmöglichkeiten anklicken.",
+    questions: [
+      {prompt: "Ich halte meine Gefühle unter Kontrolle, indem ich über meine aktuelle Situation anders nachdenke.", name: 'ERQ8', labels: ERQ_scale_labels, required: true},
+      {prompt: "Wenn ich negative Gefühle empfinde, sorge ich dafür, sie nicht nach außen zu zeigen.", name: 'ERQ9', labels: ERQ_scale_labels, required: true},
+      {prompt: "Wenn ich weniger negative Gefühle empfinden möchte, versuche ich über die Situation anders zu denken.", name: 'ERQ10', labels: ERQ_scale_labels, required: true},
+    ],
+    randomize_question_order: false, 
+    button_label: "Weiter" ,
+  };
+
+
 
     const evaluation1_intro = {
         type: jsPsychHtmlButtonResponse,
         stimulus: `
             <p>
                
-                Im Alltag bewerten wir ständig unterschiedlichste Dinge – sei es Produkte, Situationen oder Personen. Diese Studie zielt darauf ab, besser zu verstehen, wie solche Bewertungen entstehen. 
+                Im Alltag bewerten wir ständig unterschiedlichste Dinge – seien es Produkte, Situationen oder Personen, die wir mehr oder weniger bewusst einschätzen. Diese Studie zielt darauf ab, besser zu verstehen, wie solche Bewertungen entstehen. 
                 
                 <br><br>
                 
@@ -1496,12 +1636,59 @@
         button_label: ['Weiter'],
     }
 
+    var visioncheck_trial = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<p>Haben Sie während der Bearbeitung der Studie eine Brille getragen?  </br> </br> Es ist sehr wichtig, dass Sie ehrlich antworten. Es gibt keine negativen Konsequenzen für Sie, wenn Sie eine Brille getragen haben. Wir müssen es nur für die Datenanalyse wissen. </br> </br> Klicken Sie auf Ihre Antwort!</p>',
+      choices: ['JA', 'NEIN'],
+      required: true,
+      data: {
+        trial_name: 'visioncheck' 
+      }
+    };
+
+    var seriouscheck_trial = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: '<p>Haben Sie die Studie ernsthaft bearbeitet? </br> </br> Auch hier ist uns eine ehrliche Antwort sehr wichtig, damit wir wissen, ob wie die von Ihnen generierten Antworten bei der Auswertung einschließen können.</p>',
+      choices: ['JA', 'NEIN'],
+      required: true,
+      data: {
+        trial_name: 'seriouscheck' 
+      }
+    };
+
+    var feedback = {
+      type: jsPsychSurveyText,
+      name: 'feedback',
+      questions: [
+        {prompt: "Haben Sie Feedback zur Studie für uns?", rows: 5, columns:100 , required:false} 
+        ],
+      preamble: `<div style="max-width: 1000px;"> Sie haben das Ende der Studie erreicht.
+      An dieser Stelle wollen wir Fragen, ob Sie uns Feedback zu dieser Studie geben möchten.
+      Wenn ja, geben Sie es bitte in das Feld unten ein. Wenn Sie kein Feedback haben, lassen Sie das Feld leer und klicken Sie auf <b>Weiter</b>.
+       </div>`,
+       button_label: 'Weiter',  
+      on_load: function () {
+        document.body.style.cursor = 'auto'
+      }
+    };
+
+    const randomCode1 = Math.random().toString(36).substring(2, 3).toUpperCase(); 
+    const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase(); 
+
+
     const end = {
         type: jsPsychHtmlKeyboardResponse,
         choices: "NO_KEYS",
         stimulus: `
             <p>
-                Danke für Ihre Teilnahme an der Studie! Sie können das Fenster jetzt schließen.
+                Danke für Ihre Teilnahme an der Studie! 
+                <br> <br>
+                Ihr anonymer Teilnahme-Code lautet ${randomCode1}POW${randomCode2}.
+                <br> <br> 
+                Um Versuchspersonenstunden an der Universität Heidelberg zu erhalten, bitte senden Sie diesen Code per Mail an die 
+                Studienleiterin Pernilla Bandick via <a href="mailto:pernilla.bandick@stud.uni-heidelberg.de">pernilla.bandick@stud.uni-heidelberg.de</a>. 
+                
+                <br> <br>Sie können das Fenster danach schließen.
             </p>
         `,
     }
@@ -1526,6 +1713,11 @@
     time_line = [];
 
     time_line.push(welcome);
+    time_line.push(end);
+    time_line.push(glasses_screening);
+    time_line.push(ERQ_pageone);
+    time_line.push(ERQ_pagetwo);
+    time_line.push(ERQ_pagethree);
     time_line.push(evaluation1_intro);
     time_line.push(evaluation1);
     if(treatment == "free_sampling") {
@@ -1559,7 +1751,10 @@
     time_line.push(word_rating2_intro);
     time_line.push(word_ratings2);
     time_line.push(demographics);
-    time_line.push(fullscreenEnd,show_data);
+    time_line.push(visioncheck_trial);
+    time_line.push(seriouscheck_trial);
+    time_line.push(feedback);
+    //time_line.push(fullscreenEnd,show_data);
     time_line.push(end);
 
     jsPsych.run([time_line]);
