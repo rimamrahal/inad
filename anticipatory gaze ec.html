@@ -37,7 +37,7 @@
     var wordlist = [[],[]];
     var used_words = [[],[]];
 
-    const trials = 10;
+    const trials = 60;
 
     var count = trials;
     var word = "";
@@ -334,7 +334,7 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
         `,
         fullscreen_mode: true,
         on_finish: function () {
-            document.body.style.cursor = 'none'
+          document.body.style.cursor = 'none'
         }
     };
 
@@ -343,12 +343,42 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
         fullscreen_mode: false,
     };
 
+    const webcamCheck = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+        <div style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 24px; /* Adjust size as needed */
+            text-align: center;
+            padding-bottom: 80vh;">
+            <p>Wir überprüfen, ob Ihre Webcam funktioniert.<br>Bitte erteilen Sie die Erlaubnis, um das Experiment zu starten.</p>
+        </div>
+    `,
+    choices: ['Weiter'],
+    on_start: function(data) {
+        // Check for webcam permission
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                stream.getTracks().forEach(track => track.stop());
+                jsPsych.finishTrial();  // Proceed if webcam access is granted
+            })
+            .catch(function() {
+                alert('Die Webcam konnte nicht geöffnet werden.\nIst sie blockiert? Diese Studie erfordert eine Webcam.');
+                location.reload();  // Reload if webcam access is denied
+            });
+    }
+};
+
     /*****************************
     ***********Eye tracking ***********
     *****************************/
 
     var cali_points = [[20,20],[20,80],[80,20], [50,50],[20,50],[50,20],[80,80],[80,50],[50,80]];
-    var point_size = 50;
+    var point_size = 10;
     var threshold = 0.7;
     var recalibrate_criterion = 0.2;
     var calibration_mode = 'view';
@@ -356,7 +386,7 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
     var eyeTrackingInstruction1 = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            <div> <font size=120%; font color = 'green';>Webcam Calibration & Validation </font><br/>
+            <div> <font size=120%; font color = 'green';>Webcam Kalibrierung & Validierung </font><br/>
             <br><br/>
             Bevor wir mit der nächsten Aufgabe beginnen, müssen wir Ihre Webcam für das Eye-Tracking aktivieren und einstellen. <br/> 
             Dieser Prozess besteht aus zwei Teilen: Der erste Teil ist die Kalibrierung, der zweite Teil die Validierung. <br/> 
@@ -1713,6 +1743,7 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
     time_line = [];
 
     time_line.push(welcome);
+    time_line.push(webcamCheck);
     time_line.push(glasses_screening);
     time_line.push(ERQ_pageone);
     time_line.push(ERQ_pagetwo);
@@ -1721,12 +1752,12 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
     time_line.push(evaluation1);
     if(treatment == "free_sampling") {
         time_line.push(free_sampling_transition);
-        time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote, calibrationInstruction,init_camera,calibration,validationInstruction, validation,recalibrate)
+        time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote,init_camera,calibration,validationInstruction, validation,recalibrate)
         time_line.push(free_sampling_introduction);
         time_line.push(free_samplings);
     } else {
         time_line.push(regular_ec_transition);
-        time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote, calibrationInstruction,init_camera,calibration,validationInstruction, validation,recalibrate)
+        time_line.push(fullscreenEnter, eyeTrackingInstruction1, eyeTrackingNote,init_camera,calibration,validationInstruction, validation,recalibrate)
         time_line.push(regular_ec_introduction);
         time_line.push(regular_ecs);
     }
