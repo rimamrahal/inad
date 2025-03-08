@@ -1,0 +1,30 @@
+{
+  "name": "online_eye_tracker",
+  "version": "1.0.0",
+  "description": "online jspych based eye tracker",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Good2Gether/keeplooking.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Good2Gether/keeplooking/issues"
+  },
+  "homepage": "https://github.com/Good2Gether/keeplooking#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1363.0",
+    "dotenv": "^16.1.4",
+    "dropbox": "^10.34.0",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.9",
+    "nodemon": "^2.0.21",
+    "webgazer": "^3.1.1"
+  }
+}

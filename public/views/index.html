@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="js/bowser.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="dist/jspsych.js"></script>
+<script src="dist/plugin-html-keyboard-response.js"></script>
+<script src="dist/plugin-html-button-response.js"></script>
+<script src="dist/plugin-survey.js"></script>
+<script src="dist/plugin-survey-multi-choice.js"></script>
+<script src="dist/plugin-image-keyboard-response.js"></script>
+<script src="dist/plugin-survey-multi-choice.js"></script>
+<script src="dist/plugin-survey-likert.js"></script>
+<script src="dist/plugin-html-slider-response.js"></script>
+<script src="dist/plugin-survey-html-form.js"></script>
+<script src="dist/plugin-preload.js"></script>
+<script src="dist/plugin-call-function.js"></script>
+<script src="dist/plugin-webgazer-init-camera.js"></script>
+<script src="dist/plugin-webgazer-calibrate.js"></script>
+<script src="dist/plugin-webgazer-validate.js"></script>
+<script src="js/webgazer/webgazer.js"></script>
+<script src="dist/plugin-survey-text.js"></script>
+<script src="dist/plugin-fullscreen.js"></script>
+<script src="dist/extension-webgazer.js"></script>
+<link rel="stylesheet" href="dist/jspsych.css"> </link>
+<link rel="icon" href="../img/favicon_io/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="../img/favicon_io/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/favicon_io//favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../img/favicon_io//favicon-16x16.png">
+<link rel="manifest" href="../img/favicon_io//site.webmanifest">
+    
+    
+    <!-- <link rel="stylesheet" href="../../dist/jspsych.css"> </link> -->
+    
+    <!-- <link href="css/" rel="stylesheet" type="text/css"></link> -->
+    <link href="css/binary-choice.css" rel="stylesheet" type="text/css"> 
+    <link rel="stylesheet" href="">
+    <script src="js/stimuli_data.js"></script>
+    <script src="js/stimuli_data_R1.js"></script>
+    
+    <!-- <script src="js/binary-choice-table.js"></script> -->
+    <script src="js/binary-choice-table-four.js"></script>
+    <script src="js/svo-survey-multi-choice.js"></script>
+    <script src="js/svo-survey-likert.js"></script>
+    <script src="../src/main.js"></script>
+    <style>
+      html, body {
+			width: 100%;
+			height: 100%;
+		}
+       .no-scroll {
+      /* ban scrolling on the main task pages */
+      overflow: hidden;
+    }
+      .jspsych-content {
+        max-height: 100%;
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+    style="max-width:1000px; margin:auto;  background-color: white;color:black; padding-bottom: 50px; padding-left: 50px;padding-right: 50px; padding-top: 50px; font-size: larger; font-family:Arial, Helvetica, sans-serif">
+    <div id="top-bar">
+      <img src="..\img\logoHD.png" alt="logo Heidelberg University"  height="100px">
+
+    </div>
+    <div id="content">
+      <p>
+        Dies ist eine Studie des Psychologischen Instituts der Universität Heidelberg. 
+        Ziel ist es, zu verstehen, welche Prozesse positiven und negativen Einschätzungen von Objekten zugrunde liegen. 
+      </p>
+      <h3>Kann ich teilnehmen?</h3>
+      <p>Jeder, der die Studie ohne Brille absolvieren kann und zwischen 18 und 35 Jahren alt ist, kann teilnehmen. 
+        Die Studie wird auf Deutsch durchgeführt, und Sie können teilnehmen, wenn Sie gut Deutsch verstehen. 
+        Sie benötigen einen Computer (Laptop oder Desktop, keine Tablets oder Handys) mit Webcam, um teilnehmen zu können.
+      </p>
+      <h3>Was kann ich erwarten, wenn ich an dieser Studie teilnehme?</h3>
+      <p>
+        Die Studie dauert ungefähr 80 Minuten. 
+        Für Ihre Teilnahme erhalten Sie 1.5 Versuchspersonenstunden. 
+      </p>
+      <h4>Allgemeine Informationen</h4>
+      <p>
+        Es werden Fragen zu persönlichen Einstellungen, Einschätzungen und demografischen Informationen gestellt. Wir fragen jedoch nicht nach Ihrem Namen oder sensiblen 
+        biografischen Daten. Alle von Ihnen bereitgestellten Informationen sind vollständig anonym. Ihre Daten werden 
+        vom System zufällig mit einer Teilnehmernummer versehen.
+      </p>
+    
+      <h4>Eye-Tracking</h4>
+      <p>Diese Studie verwendet Ihre Webcam für Eye-Tracking. Die aufgezeichneten Daten zeigen, 
+        wohin Sie auf Ihrem Bildschirm schauen. Es wird KEIN Video von Ihnen an uns gesendet. 
+        Die Daten bestehen nur aus zwei Zahlen, die die Position Ihres Blicks auf dem Bildschirm angeben. 
+        Wir zeichnen weder Ihren Bildschirm noch Videomaterial von Ihnen auf.
+      </p>
+      <p>Um teilzunehmen, müssen Sie der Nutzung Ihrer Kamera im nächsten Bildschirm zustimmen. Wenn Sie nicht möchten, dass die Kamera verwendet wird, schließen Sie bitte diese Seite.</p>
+      
+      <h3>Was sollte ich über meine Teilnahme an dieser Studie wissen?</h3>
+      <ul>
+        <li>Sie entscheiden freiwillig, ob Sie teilnehmen möchten.</li>
+        <li>Nach unserem Wissen sind mit der Teilnahme an dieser Studie keine Risiken verbunden.</li>
+        <li>Sie können die Teilnahme jederzeit beenden.</li>
+        <li>Ihre Entscheidungen werden nicht gegen Sie verwendet.</li>
+        <li>Es entstehen Ihnen keine negativen Konsequenzen, wenn Sie sich entscheiden, die Teilnahme abzubrechen.</li>
+        <li>Zur Sicherung der Transparenz wissenschaftlicher 
+          Erkenntnisse wird der vollständig anonymisierte Datensatz veröffentlicht und anderen Forschern zur Verfügung gestellt. 
+          Bitte beachten Sie, dass die möglichen Zwecke zukünftiger Analysen der Daten nicht vorhersehbar sind.
+        </li>
+      </ul>  
+      <h3>Mit wem kann ich sprechen?</h3>
+      <p>
+        Wenn Sie Fragen, Bedenken oder Beschwerden haben oder der Meinung sind, dass Ihnen durch diese Studien ein Schaden entstanden ist, 
+        kontaktieren Sie bitte Pernilla Bandick via <a href="mailto:pernilla.bandick@stud.uni-heidelberg.de">pernilla.bandick@stud.uni-heidelberg.de</a>.   
+      </p>
+    </div>
+    <p style="text-align: center;"></p>
+    <div style="text-align:right;">
+        <input type="checkbox" class="checkmark">
+        Ich <b>STIMME ZU</b> und möchte teilnehmen.
+        <br><br><br>
+        <button class="goExp jspsych-btn" >
+            Clicken, um zu beginnen!
+        </button>
+    </div>
+</div>
+  </body>
+  <script>
+    // startExp();
+    const goExp = document.querySelector(".goExp");
+
+    function showAlert() {
+        alert("Bitte setzen Sie ein Häkchen, um zu beginnen!");
+    }
+
+
+    $('body').on('click', '.goExp', function () {
+      if ($('.checkmark').is(":checked"))
+      {
+        ensureWebcam(() => startExp());
+      // startExp();
+      }else{
+        showAlert();
+      }
+        
+    });
+
+    function ensureWebcam(callback) {
+        $('body').html('<p class="center", style="font-family:Arial, Helvetica, sans-serif"Webcam wird gestartet ... Zugriff erlauben, um mit dem Experiment zu beginnen.</p>');
+        window.navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            stream.getTracks().forEach(track => track.stop());
+            callback();
+        })
+        .catch(function() {
+            alert('Webcam reagiert nicht.\nIst sie blockiert? Diese Studie setzt eine funktionierende Webcam voraus.');
+            location.reload();
+        });
+    }
+    
+  </script>
+</html>
