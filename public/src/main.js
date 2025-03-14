@@ -24,9 +24,13 @@
         '../img/instruct3.png']
     };
 
-    var fixation_duration = 1000;
+    var fixation_duration = 500;
     var successExp = false;
-    var resize_screen = false;stimuli_data_r1
+    var resize_screen = false;
+    var point_size = 50;
+    var threshold = 0.7; // at least 70% of gazes must be inside a given ROI to be considered accurate (threshold)
+    var recalibrate_criterion = 0.222; // if at least 2 ROIs (2 points out of 9 total points shown = 0.22) are below the threshold set above, this will trigger recalibration in the initial validation phases (not while the task is running)
+    var calibration_mode = 'view';
 
     function closeFullscreen() {
       if (document.exitFullscreen) {
@@ -44,6 +48,7 @@
     }
 
     var jsPsych = initJsPsych({
+      override_safe_mode: true,
       extensions: [
         {type: jsPsychExtensionWebgazer}
       ], 
@@ -199,16 +204,15 @@
   const eyeTrackingInstruction1 = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `
-          <div> <font size=120%; font color = 'green';>Webcam Kalibrierung & Validierung </font><br/>
+          <div> <font size=120%; font color = 'green';>Webcam Webcam Einstellung </font><br/>
           <br><br/>
           Bevor wir mit der nächsten Aufgabe beginnen, müssen wir Ihre Webcam für das Eye-Tracking aktivieren und einstellen. <br/> 
-          Dieser Prozess besteht aus zwei Teilen: Der erste Teil ist die Kalibrierung, der zweite Teil die Validierung. <br/> 
+          Dabei bringen Sie der Webcam bei, Ihre Blicke zur erkennen. <br/> 
           <br><br/> 
-          Während der Kalibrierung werden Sie eine Reihe von Punkten wie diesen <span id="calibration_dot_instruction"></span> auf dem Bildschirm sehen, jeweils für 2 Sekunden. <br/> 
+          Dafür sehen Sie eine Reihe von Punkten auf dem Bildschirm. <br/> 
           Ihre Aufgabe besteht darin, jeden Punkt direkt anzusehen, bis er verschwindet. <br/> 
-          Schauen Sie dann  zum nächsten Punkt und wiederholen Sie den Vorgang. <br/> 
-          <br><br/> 
-          Die Validierung funktioniert im Grunde genauso wie die Kalibrierung. Sie müssen einfach jeden Punkt ansehen, bis er verschwindet. <br/> 
+          Schauen Sie dann zum nächsten Punkt und wiederholen Sie den Vorgang. <br/> 
+          <br/> 
           <br><br/> 
           Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.  </div>
       `,
@@ -220,7 +224,7 @@
   const eyeTrackingInstruction2 = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: `
-        Wir müssen nun erneut die Webcam kalibrieren.
+        Wir müssen nun erneut die Webcam checken.
         <br><br/>
         Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.
     `,
@@ -232,9 +236,9 @@
 const eyeTrackingNote = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-      <div><font size=120%; font color = 'green';>Webcam Calibration & Validation</font><br/>
+      <div><font size=120%; font color = 'green';>Webcam Einstellungen</font><br/>
       <br><br>
-      <font size = 5px font color = "darkred">Es gibt mehrere <b>WICHTIGE</b> Tipps, die Ihnen helfen, die Kalibrierungsaufgabe erfolgreich zu absolvieren:<br/></font> 
+      <font size = 5px font color = "darkred">Es gibt mehrere <b>WICHTIGE</b> Tipps, die Ihnen helfen, die Webcam bestmöglich zu benutzen:<br/></font> 
       <img height="200px" width="1000px" src="img/instruct1.png"><br/> 
       <br><br> 
       <div style="text-align:left"> Zusätzlich zu den Tipps in der Abbildung: <br> 
@@ -280,7 +284,9 @@ const calibrationInstruction= {
     const validationInstruction = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus:`
-          <div>  Nun messen wir die Genauigkeit der Kalibrierung. <br/>
+          <div>  Nun messen wir die Genauigkeit der Einstellungen. <br/>
+          <br><br/>
+          Blicken Sie der Reihe nach auf die schwarzen Punkte, bis sie verschwinden.
           <br><br/>
           Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren. </div>
       `,
@@ -291,19 +297,27 @@ const calibrationInstruction= {
   
 
     // VALIDATION PROCEDURE
-    const validation_points_array = [[25,25], [25,75], [75,25], 
-      [75,75], [25,50], [50,50],
-      [75,50], [50,25], [50,75]];
-        var validation_points_trial = jsPsych.randomization.shuffle(validation_points_array);
-
-        const validation = {
-      type: jsPsychWebgazerValidate,
-      validation_points: validation_points_trial.slice(0, 4),
-      show_validation_data: false,
-      roi_radius: 150,
-      validation_duration: 2000,
-      on_finish: (data) => console.log("sadfasdfa2", data.percent_in_roi)
-    };
+    var validation_points_array = [[25,25], [25,75], [75,25], 
+    [75,75], [25,50], [50,50],
+    [75,50], [50,25], [50,75]];
+      var validation_points_trial = jsPsych.randomization.shuffle(validation_points_array);
+  
+  var validation = {
+    type: jsPsychWebgazerValidate,
+    validation_points: validation_points_trial.slice(0, 9),
+    show_validation_data: false,
+    roi_radius: 150,
+    validation_duration: 2000,
+    dot_threshold: threshold,
+    data: {
+      task: 'validate'
+    },
+    on_finish: (data) => {
+      console.log("Validation Data:", data.percent_in_roi);
+      console.log("Below Threshold Count:", data.percent_in_roi.filter(x => x < threshold).length);
+    }
+    
+  };
 
     // RECALIBRATE 
 
@@ -311,33 +325,33 @@ const calibrationInstruction= {
     const recalibrateInstruction = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `
-          <p>Die Genauigkeit der Kalibrierung ist etwas niedriger als für diese Studie notwendig.</p>
-          <p>Versuchen wir es noch einmal mit der Kalibrierung.</p>
+          <p>Die Genauigkeit ist etwas niedriger als für diese Studie notwendig.</p>
+          <p>Lassen Sie uns die Webcam noch einmal trainieren.</p>
           <br></br>
           <p>Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.  </p>
       `,
       choices: [' '],
   }
 
-  const recalibrate = {
+  var recalibrate = {
     timeline: [recalibrateInstruction, calibration, validationInstruction, validation],
     conditional_function: function(){
-        var validation_data = jsPsych.data.get().filter({task: 'validate'}).values()[0];
-        var below_threshold_count = validation_data.percent_in_roi.filter(function(x) {
-            var minimum_percent_acceptable = threshold;
-            return x < minimum_percent_acceptable}).length;
-    
-            return below_threshold_count/cali_points.length >= recalibrate_criterion;
-
-        // return validation_data.percent_in_roi.some(function(x){
-        //   var minimum_percent_acceptable = threshold;
-        //   return x < minimum_percent_acceptable;
-        // });
+      var validation_data = jsPsych.data.get().filter({task: 'validate'}).values()[0];
+      var below_threshold_count = validation_data.percent_in_roi.filter(function(x) {
+        var minimum_percent_acceptable = threshold;
+        return x < minimum_percent_acceptable}).length;
+  
+        return below_threshold_count/9 >= recalibrate_criterion;
+  
+      // return validation_data.percent_in_roi.some(function(x){
+      //   var minimum_percent_acceptable = threshold;
+      //   return x < minimum_percent_acceptable;
+      // });
     },
     data: {
-        phase: 'recalibration'
+      phase: 'recalibration'
     }
-}
+  }
 
     // RECALIBRATION AT CERTAIN TRIALS
     const cali_vali_instructions = {

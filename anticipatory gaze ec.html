@@ -381,21 +381,17 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
     var point_size = 10;
     var threshold = 0.7;
     var recalibrate_criterion = 0.2;
-    var calibration_mode = 'view';
 
     var eyeTrackingInstruction1 = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            <div> <font size=120%; font color = 'green';>Webcam Kalibrierung & Validierung </font><br/>
+            <div> <font size=120%; font color = 'green';>Webcam Einrichtung </font><br/>
             <br><br/>
-            Bevor wir mit der nächsten Aufgabe beginnen, müssen wir Ihre Webcam für das Eye-Tracking aktivieren und einstellen. <br/> 
-            Dieser Prozess besteht aus zwei Teilen: Der erste Teil ist die Kalibrierung, der zweite Teil die Validierung. <br/> 
+            Bevor wir mit der nächsten Aufgabe beginnen, müssen wir Ihre Webcam für das Eye-Tracking aktivieren und einstellen. <br/>  
             <br><br/> 
-            Während der Kalibrierung werden Sie eine Reihe von Punkten wie diesen <span id="calibration_dot_instruction"></span> auf dem Bildschirm sehen, jeweils für 2 Sekunden. <br/> 
+            Dabei werden Sie eine Reihe von schwarzen Punkten auf dem Bildschirm sehen. <br/> 
             Ihre Aufgabe besteht darin, jeden Punkt direkt anzusehen, bis er verschwindet. <br/> 
-            Schauen Sie dann  zum nächsten Punkt und wiederholen Sie den Vorgang. <br/> 
-            <br><br/> 
-            Die Validierung funktioniert im Grunde genauso wie die Kalibrierung. Sie müssen einfach jeden Punkt ansehen, bis er verschwindet. <br/> 
+            Schauen Sie dann zum nächsten Punkt und wiederholen Sie den Vorgang. <br/> 
             <br><br/> 
             Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.  </div>
         `,
@@ -407,7 +403,7 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
     var eyeTrackingInstruction2 = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            Wir müssen nun erneut die Webcam kalibrieren.
+            Wir müssen nun erneut die Webcam einstellen.
             <br><br/>
             Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.
         `,
@@ -421,7 +417,7 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
         stimulus: `
             <div><font size=120%; font color = 'green';>Webcam Calibration & Validation</font><br/>
             <br><br>
-            <font size = 5px font color = "darkred">Es gibt mehrere <b>WICHTIGE</b> Tipps, die Ihnen helfen, die Kalibrierungsaufgabe erfolgreich zu absolvieren:<br/></font> 
+            <font size = 5px font color = "darkred">Es gibt mehrere <b>WICHTIGE</b> Tipps, die Ihnen helfen, die Webcam-Einstellung erfolgreich zu absolvieren:<br/></font> 
             <img height="200px" width="1000px" src="img/instruct1.png"><br/> 
             <br><br> 
             <div style="text-align:left"> Zusätzlich zu den Tipps in der Abbildung: <br> 
@@ -478,7 +474,7 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
     var validationInstruction = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus:`
-            <div>  Nun messen wir die Genauigkeit der Kalibrierung. <br/>
+            <div>  Nun messen wir die Genauigkeit der Einstellung. <br/>
             <br><br/>
             Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren. </div>
         `,
@@ -507,8 +503,8 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
     var recalibrateInstruction = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-            <p>Die Genauigkeit der Kalibrierung ist etwas niedriger als für diese Studie notwendig.</p>
-            <p>Versuchen wir es noch einmal mit der Kalibrierung.</p>
+            <p>Die Genauigkeit der Einstellung ist etwas niedriger als für diese Studie notwendig.</p>
+            <p>Versuchen wir es noch einmal.</p>
             <br></br>
             <p>Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.  </p>
         `,
