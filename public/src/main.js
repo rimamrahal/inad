@@ -640,6 +640,9 @@ const trial_1 = {
   },
   choices: "NO_KEYS",
   trial_duration: 2000,
+  on_start: function () {
+    document.body.style.cursor = 'default';
+},
   extensions: [{ type: jsPsychExtensionWebgazer, params: { targets: ['#jspsych-html-keyboard-response-stimulus'] } }],
 };
 
