@@ -627,6 +627,9 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
           </p>
       `,
       choices: ['Weiter'],
+      on_start: function () {
+        document.body.style.cursor = 'default';
+    },
   }
 
 
@@ -794,6 +797,9 @@ const regular_ec_introduction = {
         </p>
     `,
     choices: ['Weiter'],
+    on_start: function () {
+        document.body.style.cursor = 'default';
+    },
 }
 
     
@@ -998,7 +1004,8 @@ const evaluation_cert2 = {
       ],
       required: true,
     }
-  ]
+  ],
+  button_label: "Weiter",
 };
 
   const evaluation2_procedure = {
@@ -1180,6 +1187,7 @@ for (let i = 0; i < trials; i++) {
       },
       require_movement: true,
       labels: ['sehr negativ', 'neutral', 'sehr positiv'],
+      button_label: "Weiter",
       on_start: function() {
           // Assign word dynamically based on the state of the word lists
           // Store the word in jsPsych data so it can be accessed in the next trial
@@ -1219,7 +1227,8 @@ for (let i = 0; i < trials; i++) {
               ],
               required: true,
           }
-      ],
+      ], 
+      button_label: "Weiter",
       on_start: function() {
           // No need to reassign the word here, we get it from the previous trial
           const word = jsPsych.data.get().last(1).values()[0].word;
@@ -1292,7 +1301,8 @@ const evaluation_cert3 = {
       ],
       required: true,
     }
-  ]
+  ],
+  button_label: "Weiter",
 };
 
   const evaluation3_procedure = {
@@ -1463,6 +1473,7 @@ const word_rating2_slider = {
     },
     require_movement: true,
     labels: ['sehr negativ', 'neutral', 'sehr positiv'],
+    button_label: "Weiter",
     on_start: function() {
         // Assign word dynamically based on the state of the word lists
         // Store the word in jsPsych data so it can be accessed in the next trial
@@ -1503,6 +1514,7 @@ const word_rating2_likert = {
             required: true,
         }
     ],
+    button_label: "Weiter",
     on_start: function() {
         // No need to reassign the word here, we get it from the previous trial
         const word = jsPsych.data.get().last(1).values()[0].word;
