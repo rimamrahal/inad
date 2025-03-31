@@ -2015,25 +2015,25 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
           }
       });
 
-      console.log("Extinction before pushing:", extinction_list.timeline);
-          if (extinction_list.timeline.length > 0) {
-              console.log("Adding extinction trials to main timeline");
-              for (let trial of extinction_list.timeline) {
-                  timeline.push(trial);
-              }
-          } else {
-              console.error("extinction_list.timeline is empty. Check trial setup.");
-          }
-
-
-        // Recalibration before specific trials
-        timeline.push({
-          timeline: [cali_vali_instructions, fixation_cali, fixation1],
-          conditional_function: function () {
-              // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
-              return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
-          }
-      });
+//     console.log("Extinction before pushing:", extinction_list.timeline);
+//         if (extinction_list.timeline.length > 0) {
+//             console.log("Adding extinction trials to main timeline");
+//             for (let trial of extinction_list.timeline) {
+//                 timeline.push(trial);
+//             }
+//         } else {
+//             console.error("extinction_list.timeline is empty. Check trial setup.");
+//         }
+//
+//
+//       // Recalibration before specific trials
+//       timeline.push({
+//         timeline: [cali_vali_instructions, fixation_cali, fixation1],
+//         conditional_function: function () {
+//             // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
+//             return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
+//         }
+//     });
 
         timeline.push(evaluation3_intro);
         timeline.push(evaluation3_procedure);
