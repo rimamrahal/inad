@@ -82,7 +82,7 @@
     var used_words = [[],[]];
     
 
-    const trials = 60;
+    const trials = 13;
 
     var count = trials;
     var word = "";
@@ -2004,8 +2004,8 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
           } else {
               console.error("regular_ec_trials2_list.timeline is empty. Check trial setup.");
           };
-        
-        
+
+
         // Recalibration before specific trials
         timeline.push({
           timeline: [cali_vali_instructions, fixation_cali, fixation1],
@@ -2014,7 +2014,7 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
               return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
           }
       });
-    
+
      console.log("Extinction before pushing:", extinction_list.timeline);
          if (extinction_list.timeline.length > 0) {
              console.log("Adding extinction trials to main timeline");
@@ -2024,8 +2024,8 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
          } else {
              console.error("extinction_list.timeline is empty. Check trial setup.");
          };
-       
-       
+
+
        // Recalibration before specific trials
        timeline.push({
          timeline: [cali_vali_instructions, fixation_cali, fixation1],
