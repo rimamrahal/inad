@@ -55,7 +55,6 @@
       on_finish: () => on_finish_callback(),
       on_close: () => on_finish_callback(),
       on_trial_finish: function () {if(successExp) {
-        closeFullscreen();
         document.body.style.cursor = 'auto';
         var randomCode = jsPsych.randomization.randomID(7);
         jsPsych.endExperiment(`<div>
@@ -326,6 +325,7 @@ const calibrationInstruction= {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `
           <p>Die Genauigkeit ist etwas niedriger als für diese Studie notwendig.</p>
+          <p>Versuchen Sie, Ihre Position etwas zu verändern (z.B. Lichtquellen hinter sich abstellen, näher an die Kamera rücken, Kopf auf Hand aufstützen). </p>
           <p>Lassen Sie uns die Webcam noch einmal trainieren.</p>
           <br></br>
           <p>Wenn Sie bereit sind, drücken Sie die <b>LEERTASTE</b>, um fortzufahren.  </p>
@@ -1106,6 +1106,7 @@ const joint_occurence_setup = {
       <img src="${jsPsych.timelineVariable('image')}" style="width: 200px; height: 200px;">
     `;
   },
+  button_label: "Weiter",
   questions: [
     {
       prompt: "",
@@ -1249,9 +1250,11 @@ const regular_ec_extinction_introduction = {
       <p>
           Bei der nächsten Aufgabe haben Sie die Möglichkeit, <b>noch einmal nacheinander mehr über diese Quadrate zu erfahren.</b>
           <br><br>
-          Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
+          Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht.
+          <br>Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
           <br><br> 
-          Nach jedem Durchgang kehren Sie zur Übersicht aller 6 Quadrate zurück. Insgesamt werden <b>${trials} zufällige Durchgänge</b> gezeigt, in denen Sie etwas über die Eigenschaften der Quadrate erfahren.
+          Nach jedem Durchgang kehren Sie zur Übersicht aller 6 Quadrate zurück.<br> 
+          Insgesamt werden <b>${trials} zufällige Durchgänge</b> gezeigt, in denen Sie etwas über die Eigenschaften der Quadrate erfahren.
           <b>Bitte beobachten Sie diese Durchgänge aufmerksam.</b>
       </p>
   `,
@@ -1280,6 +1283,9 @@ const regular_ec_trials2 = [
               params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
           }
       ],
+      on_start: function () {
+        document.body.style.cursor = 'default';
+    },
   },
   {
       type: jsPsychHtmlKeyboardResponse,
@@ -1693,6 +1699,7 @@ preamble: function () {
     <img src="${jsPsych.timelineVariable('image')}" style="width: 200px; height: 200px;">
   `;
 },
+button_label: "Weiter",
 questions: [
   {
     prompt: "",
@@ -1828,7 +1835,7 @@ const demographics = {
 
 var visioncheck_trial = {
   type: jsPsychHtmlButtonResponse,
-  stimulus: '<p>Haben Sie während der Bearbeitung der Studie eine Brille getragen?  </br> </br> Es ist sehr wichtig, dass Sie ehrlich antworten. Es gibt keine negativen Konsequenzen für Sie, wenn Sie eine Brille getragen haben. Wir müssen es nur für die Datenanalyse wissen. </br> </br> Klicken Sie auf Ihre Antwort!</p>',
+  stimulus: '<p>Haben Sie während der Bearbeitung der Studie eine Brille getragen?  </br> </br> Es ist sehr wichtig, dass Sie ehrlich antworten. </br> Es gibt keine negativen Konsequenzen für Sie, wenn Sie eine Brille getragen haben. Wir müssen es nur für die Datenanalyse wissen. </br> </br> Klicken Sie auf Ihre Antwort!</p>',
   choices: ['JA', 'NEIN'],
   required: true,
   data: {
@@ -1969,8 +1976,11 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
         timeline.push({
             timeline: [cali_vali_instructions, fixation_cali, fixation1],
             conditional_function: function () {
+              const trialIndex = jsPsych.data.get().last(1).trial_index;  // Get the last trial index
+              console.log("Current trial index:", trialIndex); // Debugging line to check the trial index
+
                 // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
-                return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
+                return [12, 24, 36, 48].includes(trialIndex);
             }
         });
   
