@@ -1243,7 +1243,296 @@ for (let i = 0; i < trials; i++) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Regular EC + Extinction ////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
+const regular_ec_extinction_introduction = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+      <p>
+          Bei der nächsten Aufgabe haben Sie die Möglichkeit, <b>noch einmal nacheinander mehr über diese Quadrate zu erfahren.</b>
+          <br><br>
+          Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht. Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
+          <br><br> 
+          Nach jedem Durchgang kehren Sie zur Übersicht aller 6 Quadrate zurück. Insgesamt werden <b>${trials} zufällige Durchgänge</b> gezeigt, in denen Sie etwas über die Eigenschaften der Quadrate erfahren.
+          <b>Bitte beobachten Sie diese Durchgänge aufmerksam.</b>
+      </p>
+  `,
+  choices: ['Weiter'],
+}
+
+
+
+
+const regular_ec_trials2 = [
+  {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function () {
+          console.log(`Displaying start message. Remaining trials: ${count}`);
+          return `
+              Der Computer entscheidet nach dem Zufallsprinzip über den nächsten Durchgang!
+              <br><br>
+              Verbleibende Durchgänge ${count}
+          `;
+      },
+      choices: "NO_KEYS",
+      trial_duration: 2000,
+      extensions: [
+          {
+              type: jsPsychExtensionWebgazer, 
+              params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+          }
+      ],
+  },
+  {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: ``,
+      choices: "NO_KEYS",
+      trial_duration: 500,
+      extensions: [
+          {
+              type: jsPsychExtensionWebgazer, 
+              params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+          }
+      ],
+  },
+  {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `+`,
+      choices: "NO_KEYS",
+      trial_duration: 500,
+      extensions: [
+          {
+              type: jsPsychExtensionWebgazer, 
+              params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+          }
+      ],
+  },
+  {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '',
+      choices: "NO_KEYS",
+      trial_duration: 2000,
+      on_start: function (trial) {
+          let html = ``;
+          for (let i = 0; i < images.length; i++) {
+              const style = `position: absolute; left: ${positions[i].left}; top: ${positions[i].top}; transform: translateX(-50%) translateY(-50%); width: 100px; height: 100px;`;
+              html += `<img src="${images[i].image}" style="${style}" id="img-${i}" data-image="${images[i].image}"/>`;
+          }
+          console.log("Displaying images:", images);
+          trial.stimulus = html;
+      },
+      on_finish: function (data) {
+          let rand_id = Math.floor(Math.random() * images.length);
+          data.clicked_image = images[rand_id].image;
+          data.association = images[rand_id].association;
+          data.count = count;
+          console.log(`Randomly selected image: ${data.clicked_image}, Association: ${data.association}`);
+      },
+      extensions: [
+          {
+              type: jsPsychExtensionWebgazer, 
+              params: {targets: ['#img-0','#img-1','#img-2','#img-3','#img-4','#img-5']}
+          }
+      ],
+  },
+  {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: ``,
+      choices: "NO_KEYS",
+      trial_duration: 500,
+      extensions: [
+          {
+              type: jsPsychExtensionWebgazer, 
+              params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+          }
+      ],
+  },
+  {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: ``,
+      on_start: function (trial) {
+          let lastData = jsPsych.data.get().last(2).values()[0];
+          const style_image = `position: absolute; left: ${left_right[lastData.association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
+          let html = `<img style="${style_image}" id="square" src="${lastData.clicked_image}" />`;
+
+          word = wordlist[lastData.association].pop();
+          const style_word = `position: absolute; left: ${left_right[lastData.association]}; top: 50%; transform: translateX(-50%) translateY(+50px); width: 100px; height: 100px;`;
+          html += `<p style="${style_word}">${word}</p>`
+          used_words[lastData.association].push(word);
+
+          console.log("Used words:", used_words);
+          console.log(`Selected word: ${word}`);
+
+          count--;
+          if (count == 0) count = trials;
+
+          trial.stimulus = html;
+      },
+      on_finish: function (data) {
+          data.word = word;
+      },
+      choices: "NO_KEYS",
+      trial_duration: 2000,
+      extensions: [
+          {
+              type: jsPsychExtensionWebgazer, 
+              params: {targets: ['#square']}
+          }
+      ],
+  },
+  {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: ``,
+      choices: "NO_KEYS",
+      trial_duration: 500,
+      extensions: [
+          {
+              type: jsPsychExtensionWebgazer, 
+              params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+          }
+      ],
+  }
+];
+
+const regular_ec_trials2_list = { timeline: [] };
+
+for (let i = 0; i < trials/2; i++) {
+    console.log(`Adding regular EC trials at iteration ${i}`);
+    for (let trial of regular_ec_trials2) {
+      regular_ec_trials2_list.timeline.push(trial);
+    }
+}
+
+
+const extinction_ec = {
+  timeline: [
+      {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: function () {
+              const html = `
+                  Der Computer entscheidet nach dem Zufallsprinzip über den nächsten Durchgang!
+                  <br><br>
+                  Verbleibende Durchgänge ${count}
+              `
+              return html;
+          },
+          choices: "NO_KEYS",
+          trial_duration: 2000,
+          extensions: [
+              {
+                  type: jsPsychExtensionWebgazer, 
+                  params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+              }
+          ],
+      },
+      {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: ``,
+          choices: "NO_KEYS",
+          trial_duration: 500,
+          extensions: [
+              {
+                  type: jsPsychExtensionWebgazer, 
+                  params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+              }
+          ],
+      },
+      {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: `+`,
+          choices: "NO_KEYS",
+          trial_duration: 500,
+          extensions: [
+              {
+                  type: jsPsychExtensionWebgazer, 
+                  params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+              }
+          ],
+      },
+      {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: '',
+          choices: "NO_KEYS",
+          trial_duration: 2000,
+          on_start: function (trial) {
+              let html = ``;
+              for (let i = 0; i < images.length; i++) {
+                  const style = `position: absolute; left: ${positions[i].left}; top: ${positions[i].top}; transform: translateX(-50%) translateY(-50%); width: 100px; height: 100px;`;
+                  html += `<img src="${images[i].image}" style="${style}" id="img-${i}" data-image="${images[i].image}"/>`;
+              }
+              trial.stimulus = html;
+          },
+          on_finish: function (data) {
+              rand_id = Math.floor(Math.random() * 6);
+              data.clicked_image = images[rand_id].image;
+              data.association = images[rand_id].association;
+              data.count = count;
+          },
+          extensions: [
+              {
+                  type: jsPsychExtensionWebgazer, 
+                  params: {targets: ['#img-0','#img-1','#img-2','#img-3','#img-4','#img-5']}
+              }
+          ],
+      },
+      {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: ``,
+          choices: "NO_KEYS",
+          trial_duration: 500,
+          extensions: [
+              {
+                  type: jsPsychExtensionWebgazer, 
+                  params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+              }
+          ],
+      },
+      {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: ``,
+          on_start: function (trial) {
+              const style_image = `position: absolute; left: ${left_right[jsPsych.data.get().last(2).values()[0].association]}; top: 50%; transform: translateX(-50%) translateY(-40%); width: 100px; height: 100px;`;
+              let html = `<img style="${style_image}" id="square" src="${jsPsych.data.get().last(2).values()[0].clicked_image}" />`;
+              
+              count --;
+              if (count == 0)
+                  count = trials;
+              trial.stimulus = html;
+          },
+          choices: "NO_KEYS",
+          trial_duration: 2000,
+          extensions: [
+              {
+                  type: jsPsychExtensionWebgazer, 
+                  params: {targets: ['#square']}
+              }
+          ],
+      },
+      {
+          type: jsPsychHtmlKeyboardResponse,
+          stimulus: ``,
+          choices: "NO_KEYS",
+          trial_duration: 500,
+          extensions: [
+              {
+                  type: jsPsychExtensionWebgazer, 
+                  params: {targets: ['#jspsych-html-keyboard-response-stimulus']}
+              }
+          ],
+      },
+  ]
+}
+
+const extinction_list = { timeline: [] };
+
+for (let i = 0; i < trials/2; i++) {
+    console.log(`Adding extinction trials at iteration ${i}`);
+    for (let trial of extinction_ec) {
+      extinction_list.timeline.push(trial);
+    }
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Evaluation 3 ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1703,8 +1992,48 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
         timeline.push(word_ratings);
 
 
+        timeline.push(eyeTrackingInstruction1, eyeTrackingNote,init_camera,calibration,validationInstruction, validation,recalibrate);
+        time_line.push(regular_ec_extinction_introduction);
+
+        console.log("Regular EC trials 2 before pushing:", regular_ec_trials_list.timeline);
+          if (regular_ec_trials2_list.timeline.length > 0) {
+              console.log("Adding regular_ec2 trials to main timeline");
+              for (let trial of regular_ec_trials2_list.timeline) {
+                  timeline.push(trial);
+              }
+          } else {
+              console.error("regular_ec_trials2_list.timeline is empty. Check trial setup.");
+          }
 
 
+        // Recalibration before specific trials
+        timeline.push({
+          timeline: [cali_vali_instructions, fixation_cali, fixation1],
+          conditional_function: function () {
+              // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
+              return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
+          }
+      });
+
+      console.log("Extinction before pushing:", extinction_list.timeline);
+          if (extinction_list.timeline.length > 0) {
+              console.log("Adding extinction trials to main timeline");
+              for (let trial of extinction_list.timeline) {
+                  timeline.push(trial);
+              }
+          } else {
+              console.error("extinction_list.timeline is empty. Check trial setup.");
+          }
+
+
+        // Recalibration before specific trials
+        timeline.push({
+          timeline: [cali_vali_instructions, fixation_cali, fixation1],
+          conditional_function: function () {
+              // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
+              return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
+          }
+      });
 
         timeline.push(evaluation3_intro);
         timeline.push(evaluation3_procedure);
