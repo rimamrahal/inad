@@ -452,7 +452,7 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
               // Ensure the user is still in fullscreen mode
               if (!document.fullscreenElement) {
                   console.log("Resized or fullscreen exited!");
-                  alert("Sie haben den Vollbildmodus verlassen! Die Studie wurde automatisch abgebroche.");
+                  alert("Sie haben den Vollbildmodus verlassen! Die Studie wurde automatisch abgebrochen.");
                   window.location.href = "../views/failed.html";
               }
           }
@@ -1251,11 +1251,12 @@ const regular_ec_extinction_introduction = {
           Bei der nächsten Aufgabe haben Sie die Möglichkeit, <b>noch einmal nacheinander mehr über diese Quadrate zu erfahren.</b>
           <br><br>
           Pro Durchgang sehen Sie alle 6 Quadrate in einer Übersicht.
-          <br>Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren. Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
+          <br>Der Computer wird wiederholt und nach dem Zufallsprinzip entscheiden, zu welchem Quadrat Sie mehr erfahren.
+          <br>Das ausgewählte Quadrat wird dann gleichzeitig mit einem <b>positiven</b> oder <b>negativen</b> Eigenschaftswort gezeigt.
           <br><br> 
           Nach jedem Durchgang kehren Sie zur Übersicht aller 6 Quadrate zurück.<br> 
           Insgesamt werden <b>${trials} zufällige Durchgänge</b> gezeigt, in denen Sie etwas über die Eigenschaften der Quadrate erfahren.
-          <b>Bitte beobachten Sie diese Durchgänge aufmerksam.</b>
+          <br><b>Bitte beobachten Sie diese Durchgänge aufmerksam.</b>
       </p>
   `,
   choices: ['Weiter'],
@@ -1998,7 +1999,7 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
         timeline.push(word_ratings);
 
 
-        timeline.push(eyeTrackingInstruction1, eyeTrackingNote, calibration,validationInstruction, validation,recalibrate);
+        timeline.push(eyeTrackingInstruction1, eyeTrackingNote, init_camera, calibration,validationInstruction, validation,recalibrate);
         timeline.push(regular_ec_extinction_introduction);
 
         console.log("Regular EC trials 2 before pushing:", regular_ec_trials2_list.timeline);
