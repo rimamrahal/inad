@@ -1953,6 +1953,9 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
             console.log("Adding free_samplings trials to main timeline");
             for (let i = 0; i < free_samplings.timeline.length; i++) {
                 timeline.push(free_samplings.timeline[i]);
+                if ((i + 1) % 12 === 0) {
+                    timeline.push(glasses_screening); // Replace 'extra_event' with what should happen
+                }
             }
         } else {
             console.error("free_samplings.timeline is empty. Check trial setup.");
@@ -1966,6 +1969,9 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
               console.log("Adding regular_ec trials to main timeline");
               for (let trial of regular_ec_trials_list.timeline) {
                   timeline.push(trial);
+                  if ((i + 1) % 12 === 0) {
+                    timeline.push(glasses_screening); // Replace 'extra_event' with what should happen
+                }
               }
           } else {
               console.error("regular_ec_trials_list.timeline is empty. Check trial setup.");
