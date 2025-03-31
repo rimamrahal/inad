@@ -445,24 +445,20 @@ choices: ['Keine Brille auf und kann teilnehmen.', 'Brille auf und kann nicht te
       button_label: "Vollbildmodus starten",
       fullscreen_mode: true,
       on_finish: function () {
-      //   document.body.style.cursor = 'none'
-      window.onresize = resize
-      function resize() {
-        if(successExp && !resize_screen){
-          resize_screen = false;
-          console.log("end experiment resize");
-        } else{
-          resize_screen = true;
-          console.log("Resized!");
-          alert("Sie haben den Vollbildmodus verlassen! Die Studie wurde automatisch abgebroche.");
-          // location.reload(true);
-          // window.location.href = window.location;
-          window.location.href = "../views/failed.html";
+          window.onresize = resize;
+          var resize_screen = false;
           
-        }
+          function resize() {
+              // Ensure the user is still in fullscreen mode
+              if (!document.fullscreenElement) {
+                  console.log("Resized or fullscreen exited!");
+                  alert("Sie haben den Vollbildmodus verlassen! Die Studie wurde automatisch abgebroche.");
+                  window.location.href = "../views/failed.html";
+              }
+          }
       }
-    }
-    };
+  };
+  
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
