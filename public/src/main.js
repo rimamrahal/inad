@@ -81,7 +81,7 @@
     var used_words = [[],[]];
     
 
-    const trials = 13;
+    const trials = 60;
 
     var count = trials;
     var word = "";
@@ -1935,13 +1935,13 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
     function startExp(){
         var timeline = [];
         timeline.push(preload);
-//        timeline.push(glasses_screening);
-//        timeline.push(fullscreenEnter);
-//        timeline.push(ERQ_pageone);
-//        timeline.push(ERQ_pagetwo);
-//        timeline.push(ERQ_pagethree);
-//        timeline.push(evaluation1_intro);
-//        timeline.push(evaluation_procedure);
+        timeline.push(glasses_screening);
+        timeline.push(fullscreenEnter);
+        timeline.push(ERQ_pageone);
+        timeline.push(ERQ_pagetwo);
+        timeline.push(ERQ_pagethree);
+        timeline.push(evaluation1_intro);
+        timeline.push(evaluation_procedure);
 
 
       if(treatment == "free_sampling") {
@@ -1989,14 +1989,14 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
 
 
 
-//        timeline.push(evaluation2_intro);
-//        timeline.push(evaluation2_procedure);
-//        timeline.push(estimate);
-//        timeline.push(estimate_individuals);
-//        timeline.push(joint_occurence_intro);
-//        timeline.push(joint_occurence_procedure);
-//        timeline.push(word_rating_intro);
-//        timeline.push(word_ratings);
+        timeline.push(evaluation2_intro);
+        timeline.push(evaluation2_procedure);
+        timeline.push(estimate);
+        timeline.push(estimate_individuals);
+        timeline.push(joint_occurence_intro);
+        timeline.push(joint_occurence_procedure);
+        timeline.push(word_rating_intro);
+        timeline.push(word_ratings);
 
 
         timeline.push(eyeTrackingInstruction1, eyeTrackingNote, init_camera, calibration,validationInstruction, validation,recalibrate);
