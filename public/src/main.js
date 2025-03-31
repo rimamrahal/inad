@@ -1529,7 +1529,7 @@ const extinction_list = { timeline: [] };
 
 for (let i = 0; i < trials/2; i++) {
     console.log(`Adding extinction trials at iteration ${i}`);
-    for (let trial of extinction_ec) {
+    for (let trial of extinction_ec.timeline) {
       extinction_list.timeline.push(trial);
     }
 }
