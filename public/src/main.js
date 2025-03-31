@@ -1935,13 +1935,13 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
     function startExp(){
         var timeline = [];
         timeline.push(preload);
-        timeline.push(glasses_screening);
-        timeline.push(fullscreenEnter);
-        timeline.push(ERQ_pageone);
-        timeline.push(ERQ_pagetwo);
-        timeline.push(ERQ_pagethree);
-        timeline.push(evaluation1_intro);
-        timeline.push(evaluation_procedure);
+//        timeline.push(glasses_screening);
+//        timeline.push(fullscreenEnter);
+//        timeline.push(ERQ_pageone);
+//        timeline.push(ERQ_pagetwo);
+//        timeline.push(ERQ_pagethree);
+//        timeline.push(evaluation1_intro);
+//        timeline.push(evaluation_procedure);
 
 
       if(treatment == "free_sampling") {
@@ -1953,10 +1953,6 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
             console.log("Adding free_samplings trials to main timeline");
             for (let i = 0; i < free_samplings.timeline.length; i++) {
                 timeline.push(free_samplings.timeline[i]);
-            // Insert recalibration at specific points
-            if ((i + 1) % 12 === 0) {
-              timeline.push(cali_vali_instructions, fixation_cali, fixation1);
-              }
             }
         } else {
             console.error("free_samplings.timeline is empty. Check trial setup.");
@@ -1970,26 +1966,37 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
               console.log("Adding regular_ec trials to main timeline");
               for (let trial of regular_ec_trials_list.timeline) {
                   timeline.push(trial);
-              // Insert recalibration at specific points
-              if ((i + 1) % 12 === 0) {
-                timeline.push(cali_vali_instructions, fixation_cali, fixation1);
-                }
               }
           } else {
               console.error("regular_ec_trials_list.timeline is empty. Check trial setup.");
           }
-      };
+      }
+
+
+     // Recalibration before specific trials
+        timeline.push({
+            timeline: [cali_vali_instructions, fixation_cali, fixation1],
+            conditional_function: function () {
+              const trialIndex = jsPsych.data.get().last(1).trial_index;  // Get the last trial index
+              console.log("Current trial index:", trialIndex); // Debugging line to check the trial index
+
+                // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
+                return [12, 24, 36, 48].includes(trialIndex);
+            }
+        });
+  
 
 
 
-        timeline.push(evaluation2_intro);
-        timeline.push(evaluation2_procedure);
-        timeline.push(estimate);
-        timeline.push(estimate_individuals);
-        timeline.push(joint_occurence_intro);
-        timeline.push(joint_occurence_procedure);
-        timeline.push(word_rating_intro);
-        timeline.push(word_ratings);
+
+//        timeline.push(evaluation2_intro);
+//        timeline.push(evaluation2_procedure);
+//        timeline.push(estimate);
+//        timeline.push(estimate_individuals);
+//        timeline.push(joint_occurence_intro);
+//        timeline.push(joint_occurence_procedure);
+//        timeline.push(word_rating_intro);
+//        timeline.push(word_ratings);
 
 
         timeline.push(eyeTrackingInstruction1, eyeTrackingNote, init_camera, calibration,validationInstruction, validation,recalibrate);
@@ -2000,31 +2007,40 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
               console.log("Adding regular_ec2 trials to main timeline");
               for (let trial of regular_ec_trials2_list.timeline) {
                   timeline.push(trial);
-              // Insert recalibration at specific points
-              if ((i + 1) % 12 === 0) {
-                timeline.push(cali_vali_instructions, fixation_cali, fixation1);
-                }
               }
           } else {
               console.error("regular_ec_trials2_list.timeline is empty. Check trial setup.");
           };
 
 
+        // Recalibration before specific trials
+        timeline.push({
+          timeline: [cali_vali_instructions, fixation_cali, fixation1],
+          conditional_function: function () {
+              // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
+              return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
+          }
+      });
 
      console.log("Extinction before pushing:", extinction_list.timeline);
          if (extinction_list.timeline.length > 0) {
              console.log("Adding extinction trials to main timeline");
              for (let trial of extinction_list.timeline) {
                  timeline.push(trial);
-            // Insert recalibration at specific points
-            if ((i + 1) % 12 === 0) {
-              timeline.push(cali_vali_instructions, fixation_cali, fixation1);
-              }
              }
          } else {
              console.error("extinction_list.timeline is empty. Check trial setup.");
          };
 
+
+       // Recalibration before specific trials
+       timeline.push({
+         timeline: [cali_vali_instructions, fixation_cali, fixation1],
+         conditional_function: function () {
+             // Check if the trial number is 12, 24, 36, 48 (or any other specific trials you want)
+             return [12, 24, 36, 48].includes(jsPsych.data.get().trial_index);
+         }
+     });
 
         timeline.push(evaluation3_intro);
         timeline.push(evaluation3_procedure);
