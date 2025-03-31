@@ -1993,7 +1993,7 @@ const randomCode2 = Math.random().toString(36).substring(2, 3).toUpperCase();
 
 
         timeline.push(eyeTrackingInstruction1, eyeTrackingNote, calibration,validationInstruction, validation,recalibrate);
-        timeline.push.push(regular_ec_extinction_introduction);
+        timeline.push(regular_ec_extinction_introduction);
 
   //      console.log("Regular EC trials 2 before pushing:", regular_ec_trials2_list.timeline);
   //        if (regular_ec_trials2_list.timeline.length > 0) {
