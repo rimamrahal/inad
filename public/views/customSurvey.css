@@ -1,0 +1,113 @@
+.jspsych-content-wrapper {
+    color: white;
+    background-color: grey;
+  }
+
+.case-instructions-container {
+    margin: auto;
+    padding: 30px;
+    border-radius: 8px;
+    width: 66%;
+    text-align: justify;
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1.6;
+  }
+  .case-instructions-container p {
+    margin-bottom: 20px;
+  }
+
+  .continue-instructions {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .charge-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 90%;
+    margin: auto;
+  }
+
+  .jspsych-survey-likert-opt-label {
+    color: white;
+}
+
+  /* Case */
+
+  #jspsych-html-keyboard-response-stimulus .background {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    #jspsych-html-keyboard-response-stimulus table {
+        width: 90%;
+        height: 80%;
+        border-collapse: collapse;
+    }
+    #jspsych-html-keyboard-response-stimulus td {
+        font-size: 1.2em;
+        text-align: center;
+        vertical-align: middle;
+        padding: 20px;
+        width: 33%;
+    }
+    .top-left {
+        border-top: 2px solid;
+        border-left: 2px solid;
+        height: 40%;
+    }
+    .top-right {
+        border-top: 2px solid;
+        border-right: 2px solid;
+        height: 40%;
+    }
+    .top-center {
+        border-top: 2px solid;
+        transform: translateY(-2em); /* Moves the cell two lines up */
+        height: 40%;
+    }
+    .middle-left {
+        border-left: 2px solid;
+        border-bottom: 2px solid;
+        height: 40%;
+    }
+    .middle-center{
+        border-bottom: 2px solid;
+        transform: translateY(2em); /* Moves the cell two lines down */
+        height: 40%;
+
+    }
+    .middle-right {
+        border-right: 2px solid;
+        border-bottom: 2px solid;
+        height: 40%;
+    }
+    .bottom-left {
+        text-align: left;
+        height: 20%;
+    }
+    .bottom-right {
+        text-align: right;
+        height: 20%;
+    }
+
+    .prompt {
+        display: none;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button, 
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
