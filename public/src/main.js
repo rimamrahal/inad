@@ -44,9 +44,9 @@
       jsPsych.endExperiment(`<div>
           Thanks for participating! 
           <br> <br>
-          Your participation code is XXXXXXXXXX.
+          Your participation code is 2FABFE32.
           <br> <br> 
-          Please return to Prolifict and enter this code to get paid.
+          Please return to Prolific and enter this code to get paid.
           <br> <br>You can close this window afterwards.
       </div>`);
       }
@@ -77,7 +77,7 @@ var on_finish_callback = function () {
      })
      .done(function () {
       ("Thanks for taking part!" +
-      "Your participation code is: <b> 92830102." +
+      "Your participation code is: <b> 2FABFE32." +
       "Please enter it on Prolific. " +
       "You can then close this window.")
      })
@@ -152,6 +152,43 @@ var on_finish_callback = function () {
     }
   }
   };
+
+  var start_exp_survey_trial = {
+    type: jsPsychSurveyText,
+    questions: [
+      {prompt: "What's your Prolific ID (needed for payment)?", rows: 2, columns:50 , required:true}, 
+    ],
+    preamble: `<div>Thank you for participating in this study! Please answer the following question. </div>`,
+  };
+
+
+  var glasses_screening = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+     <p> One of our goals in this study is to examine eye movements. 
+          <br>Glasses often make this impossible because they reflect light from the screen. 
+          <br>You can only participate if you are NOT wearing glasses. 
+          <br>It's okay to participate if you can take off your glasses now and still read very small text on the screen.
+          <br><br> <div style="font-size: 10px !important;">If you cannot read this WITHOUT glasses, you cannot participate!</div> 
+          <br><br>Please be honest and tell us below whether you can participate.  
+          <br><br><br>Please confirm that you are not wearing glasses and can participate in this study.</p>
+      `,
+choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
+    required: true,
+    on_finish: function(data) {
+        // Check if the answer is "Cannot take part"
+        if (data.response === 1) {  // 0 corresponds to the first button ("Yes")
+            // If they are wearing glasses, redirect and end the experiment
+            window.location.href = "https://app.prolific.com/submissions/complete?cc=C161H3CJ";  // Redirect to 
+        } else {
+            // Otherwise, continue with the experiment
+            console.log("Participant chose no glasses, continuing the experiment.");
+        }
+    },
+    data: {
+      name: 'glasses_screening'
+    }
+};
 
 
   var audio_word_entry = {
@@ -1763,15 +1800,32 @@ trial_duration: 1000,
   };
 
 
-  var goodbye_trial = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: `
-      <p>Thanks!<p>
-      <p> You're done with the study.</p>
-      <br><br><br><br>
-      <div class="continue-instructions">Press SPACE to continue</div>`
-  }
 
+  var visioncheck_trial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: '<p>Did you wear glasses during this study?  </br> </br> It is very important that you answer honestly. </br>There are no negative consequences for you if you did. We need to know for our data analyses. </br> </br> Click on your answer!</p>',
+    choices: ['YES', 'NO'],
+    required: true,
+    data: {
+      trial_name: 'visioncheck' 
+    }
+  };
+
+  var feedback = {
+    type: jsPsychSurveyText,
+    name: 'feedback',
+    questions: [
+      {prompt: "Do you have any feedback for us?", rows: 5, columns:100 , required:false} 
+      ],
+    preamble: `<div style="max-width: 1000px;"> You're almost done with the study.
+    Now we'd like to know if you have any feedback about the study for us. 
+    If so, please enter it below. If not, leave the field empty and click <b>Continue</b>.
+     </div>`,
+     button_label: 'Weiter',  
+    on_load: function () {
+      document.body.style.cursor = 'auto'
+    }
+  };
 
 var success_guard = {
   type: jsPsychCallFunction,
@@ -1787,7 +1841,9 @@ var success_guard = {
     // adding the trials to the timeline
 
     timeline.push(preload);
+    timeline.push(start_exp_survey_trial);
     timeline.push(fullscreenEnter);
+    timeline.push(glasses_screening);
 
     timeline.push(testcam);
     timeline.push(calibration_instructions);
@@ -1881,8 +1937,8 @@ var success_guard = {
       timeline.push(case_evaluate_wiretape_questions);
     }
 
-
-    timeline.push(goodbye_trial);
+    timeline.push(visioncheck_trial);
+    timeline.push(feedback);
 
     timeline.push(success_guard);
 
