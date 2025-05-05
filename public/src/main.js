@@ -1008,7 +1008,7 @@ var on_finish_callback = function () {
     }
   }
 
-        // Done
+        // test cam
         const testcam = {
           type: jsPsychHtmlKeyboardResponse,
           stimulus: `
@@ -1019,7 +1019,7 @@ var on_finish_callback = function () {
           post_trial_gap: 1000
         };
 
-      // Done
+      // Done test cam
       const donetest = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
@@ -1028,9 +1028,12 @@ var on_finish_callback = function () {
          <br></br>
          Press <b>SPACE</b> to continue!</div>`,
         choices: [' '],
-        post_trial_gap: 1000
+        post_trial_gap: 1000,on_load: function () {
+          document.body.style.cursor = 'auto';
+        }
       };
 
+        // done et overall
       const done = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
@@ -1039,7 +1042,10 @@ var on_finish_callback = function () {
          <br></br>
          Press <b>SPACE</b> to continue!</div>`,
         choices: [' '],
-        post_trial_gap: 1000
+        post_trial_gap: 1000,
+        on_load: function () {
+          document.body.style.cursor = 'auto';
+        }
       };
 
 
