@@ -81,7 +81,7 @@ app.use(blockUnsupportedBrowsers);
 // --VIEW LOCATONS
 app.set("views", __dirname + "/public/views");
 app.engine("html", require("ejs").renderFile);
-app.set("veiw engine", "html");
+app.set("view engine", "html");
 
 
 

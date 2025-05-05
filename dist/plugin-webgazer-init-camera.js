@@ -8,10 +8,11 @@ var jsPsychWebgazerInitCamera = (function (jspsych) {
           instructions: {
               type: jspsych.ParameterType.HTML_STRING,
               default: `
-            <p>Positionieren Sie Ihren Kopf so, dass die Kamera Ihre Augen gut im Bild hat.</p>
-            <p>Platzieren Sie Ihr Gesicht in der Mitte des Kästchens. Schauen Sie direkt in die Kamera. Grüne Punkte erscheinen auf Ihrem Gesicht und das Kästchen wird grün.</p>
-            <p>Falls dies nicht der Fall ist, passen Sie Ihre Position an. Beachten Sie folgende Regeln: Halten Sie Lichtquellen vor sich, sitzen Sie nah genug an der Kamera.</p>
-            <p>Wenn Ihr Gesicht in der Mitte des Kästchens ist und das Kästchen grün wird, können Sie klicken, um fortzufahren.</p>`,
+            <p>Position your head so that the camera captures your eyes clearly.</p>
+            <p>Place your face in the center of the box. Look directly into the camera. Green dots will appear on your face and the box will turn green.</p>
+            <p>If this doesn't happen, adjust your position. Follow these rules: keep light sources in front of you, and sit close enough to the camera.</p>
+            <p>When your face is in the center of the box and the box turns green, you can click to continue.</p>
+`,
           },
           /** Text for the button that participants click to end the trial. */
           button_text: {

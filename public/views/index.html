@@ -1,55 +1,163 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My experiment</title>
-    <script src="jspsych/dist/jspsych.js"></script>
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="jspsych/dist/plugin-html-keyboard-response.js"></script>
-    <script src="jspsych/dist/plugin-survey-text.js"></script>
-    <script src="jspsych/dist/plugin-survey-multi-choice.js"></script>
-    <script src="jspsych/dist/plugin-survey.js"></script>
-    <script src="jspsych/dist/plugin-survey-html-form.js"></script>
-    <script src="jspsych/dist/plugin-audio-keyboard-response.js"></script>
-    <script src="js/webgazer/webgazer.js"></script>
-    <script src="jspsych/dist/extension-webgazer.js"></script>
-    <script src="jspsych/dist/plugin-webgazer-calibrate.js"></script>
-    <script src="jspsych/dist/plugin-webgazer-init-camera.js"></script>
-    <script src="jspsych/dist/plugin-webgazer-validate.js"></script>
-    <script src="jspsych/dist/plugin-preload.js"></script>
-    <script src="jspsych/dist/plugin-survey-likert.js"></script>
-    <script src="jspsych/dist/plugin-html-button-response.js"></script>
-    <script src="jspsych/dist/plugin-fullscreen.js"></script>
-    <script src="jspsych/dist/plugin-call-function.js"></script>
-    <script src="main.js"></script>
-    <link href="jspsych/dist/jspsych.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="jspsych/dist/survey.css">
-    <link rel="stylesheet" href="customSurvey.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="js/bowser.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="dist/jspsych.js"></script>
+<script src="dist/plugin-html-keyboard-response.js"></script>
+<script src="dist/plugin-html-button-response.js"></script>
+<script src="dist/plugin-survey.js"></script>
+<script src="dist/plugin-survey-multi-choice.js"></script>
+<script src="dist/plugin-image-keyboard-response.js"></script>
+<script src="dist/plugin-survey-multi-choice.js"></script>
+<script src="dist/plugin-survey-likert.js"></script>
+<script src="dist/plugin-html-slider-response.js"></script>
+<script src="dist/plugin-survey-html-form.js"></script>
+<script src="dist/plugin-preload.js"></script>
+<script src="dist/plugin-call-function.js"></script>
+<script src="dist/plugin-webgazer-init-camera.js"></script>
+<script src="dist/plugin-webgazer-calibrate.js"></script>
+<script src="dist/plugin-webgazer-validate.js"></script>
+<script src="js/webgazer/webgazer.js"></script>
+<script src="dist/plugin-survey-text.js"></script>
+<script src="dist/plugin-fullscreen.js"></script>
+<script src="dist/extension-webgazer.js"></script>
+<script src="dist/plugin-audio-keyboard-response.js"></script>
+<link rel="stylesheet" href="dist/jspsych.css"> </link>
+<link rel="icon" href="../img/favicon_io/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="../img/favicon_io/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/favicon_io//favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../img/favicon_io//favicon-16x16.png">
+<link rel="manifest" href="../img/favicon_io//site.webmanifest">
+    
+    
+    <!-- <link rel="stylesheet" href="../../dist/jspsych.css"> </link> -->
+    
+    <!-- <link href="css/" rel="stylesheet" type="text/css"></link> -->
+    <link href="css/binary-choice.css" rel="stylesheet" type="text/css"> 
+    <link rel="stylesheet" href="">
+    <script src="js/stimuli_data.js"></script>
+    <script src="js/stimuli_data_R1.js"></script>
+    
+    <!-- <script src="js/binary-choice-table.js"></script> -->
+    <script src="js/binary-choice-table-four.js"></script>
+    <script src="js/svo-survey-multi-choice.js"></script>
+    <script src="js/svo-survey-likert.js"></script>
+    <script src="../src/main.js"></script>
+    <style>
+      html, body {
+			width: 100%;
+			height: 100%;
+		}
+       .no-scroll {
+      /* ban scrolling on the main task pages */
+      overflow: hidden;
+    }
+      .jspsych-content {
+        max-height: 100%;
+        max-width: 100%;
+      }
+    </style>
   </head>
   <body>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        ensureWebcam(() => {
-          console.log('Webcam verfügbar, Experiment kann gestartet werden');
-          startExp();
-        });
-       });
+    <div
+    style="max-width:1000px; margin:auto;  background-color: white;color:black; padding-bottom: 50px; padding-left: 50px;padding-right: 50px; padding-top: 50px; font-size: larger; font-family:Arial, Helvetica, sans-serif">
+    <div id="top-bar">
+      <img src="..\img\MPI_logo.png" alt="logo MPI"  height="100px">
 
-      function ensureWebcam(callback) {
-        $('body').html('<p class="center" style="font-family:Arial, Helvetica, sans-serif">Checking webcam ... give permission to start the experiment.</p>');
-        
-        // accessing the webcam
-        window.navigator.mediaDevices.getUserMedia({ video: true })
-          .then(function(stream) {
-            stream.getTracks().forEach(track => track.stop());
-            
-          callback();
-          })
-          .catch(function() {
-            alert('Cannot open webcam.\nIs it blocked? This study requires a webcam.');
-            location.reload();
-          });
-      }
-
-    </script>
+    </div>
+    <div id="content">
+      <p> 
+        This is a study by the Max Planck Institute for Research on Collective Goods in Germany. 
+        The aim is to understand the processes underlying evaluations of narratives. 
+      </p>
+      <h3>Can I participate?</h3>
+      <p>Anyone who can complete the study without wearing glasses and is between 18 and 35 years old can participate. 
+        The study is conducted in English, and you may participate if you have a good understanding of the language. 
+        You will need a computer (laptop or desktop, no tablets or phones) with a webcam and audio output to take part.
+      </p>
+      <h3>What can I expect if I participate in this study?</h3>
+      <p>
+        The study takes approximately 30 minutes. 
+        For your participation, you will receive a payment of XX GBP. 
+      </p>
+      <h4>General Information</h4>
+      <p>
+        You will be asked questions about personal attitudes, evaluations, and demographic information. However, we do not ask for your name or sensitive 
+        personal data. All information you provide is completely anonymous. Your data will 
+        be randomly assigned a participant number by the system.
+      </p>
+      
+      <h4>Eye-Tracking</h4>
+      <p>This study uses your webcam for eye-tracking. The recorded data shows 
+        where you are looking on your screen. NO video of you will be sent to us. 
+        The data consists only of two numbers indicating the position of your gaze on the screen. 
+        We do not record your screen or any video material of you.
+      </p>
+      <p>To participate, you must consent to the use of your camera on the next screen. If you do not wish for the camera to be used, please close this page.</p>
+      
+      <h3>What should I know about my participation in this study?</h3>
+      <ul>
+        <li>Your participation is voluntary.</li>
+        <li>To our knowledge, there are no risks associated with participating in this study.</li>
+        <li>You may end your participation at any time.</li>
+        <li>Your decisions will not be used against you.</li>
+        <li>There are no negative consequences if you choose to withdraw from participation.</li>
+        <li>To ensure transparency of scientific 
+          findings, the fully anonymized dataset will be published and made available to other researchers. 
+          Please note that the potential purposes of future analyses of the data cannot be predicted.
+        </li>
+      </ul>  
+      <h3>Who can I contact?</h3>
+      <p>
+        If you have any questions, concerns, or complaints, or believe that you have suffered harm as a result of this study, 
+        please contact Dr. Rima-Maria Rahal via <a href="mailto:rahal@coll.mpg.de">rahal@coll.mpg.de</a>.    
+      </p>      
+    </div>
+    <p style="text-align: center;"></p>
+    <div style="text-align:right;">
+        <input type="checkbox" class="checkmark">
+        I <b>AGREE</b> and want to participate.
+        <br><br><br>
+        <button class="goExp jspsych-btn" >
+            Click to begin!
+        </button>
+    </div>
+</div>
   </body>
+  <script>
+    // startExp();
+    const goExp = document.querySelector(".goExp");
+
+    function showAlert() {
+        alert("Bitte setzen Sie ein Häkchen, um zu beginnen!");
+    }
+
+
+    $('body').on('click', '.goExp', function () {
+      if ($('.checkmark').is(":checked"))
+      {
+        ensureWebcam(() => startExp());
+      // startExp();
+      }else{
+        showAlert();
+      }
+        
+    });
+
+    function ensureWebcam(callback) {
+      $('body').html('<p class="center" style="font-family:Arial, Helvetica, sans-serif">Webcam starting ... Give permission to begin the experiment.</p>');
+        window.navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            stream.getTracks().forEach(track => track.stop());
+            callback();
+        })
+        .catch(function() {
+            alert('Webcam not responding.\nIs it blocked? This study requires a working webcam.');
+            location.reload();
+        });
+    }
+    
+  </script>
 </html>
