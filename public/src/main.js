@@ -302,6 +302,26 @@ choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
       jury_experience = data.response.jury_experience;
     }
   };
+
+  var demographics_questionnaire2 = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p>Generally speaking, which political orientation do you identify with the most?</p>',
+    html: `
+       <div style="max-width: 600px; margin: auto;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label><input type="radio" name="political" value="Republican" required> Republican</label>
+          <label><input type="radio" name="political" value="Democrat" required> Democrat</label>
+          <label><input type="radio" name="political" value="Independent" required> Independent</label>
+          <label><input type="radio" name="political" value="Other" required> Other</label>
+        </div>
+      </div>
+    </div>
+    `,
+    button_label: "Click here to continue",  
+    on_finish: function(data) {
+      jury_experience = data.response.jury_experience;
+    }
+  };
     ///////
     /////// INTRO 1
     ///////
@@ -2145,6 +2165,7 @@ var success_guard = {
     timeline.push(audio_word_entry);
     timeline.push(check_word_trial);
     timeline.push(demographics_questionnaire);
+    timeline.push(demographics_questionnaire2);
     timeline.push(introduction);//
     timeline.push(distractors_instructions);
     timeline.push(distractors_story_1);
