@@ -8,7 +8,7 @@
       '../img/1Case.m4a',
       '../img/10Wiretap.m4a',
       '../img/13WiretapDisregard.m4a',
-      '../img/14Wireta Normative.m4a',
+      '../img/14WiretapNormative.m4a',
       '../img/15WiretapNeutralize.m4a',
       '../img/audiotest.m4a',
     ]
@@ -66,6 +66,7 @@ var on_finish_callback = function () {
       windowWidth: screen.width,
       windowHeight: screen.height, 
       condition: condition,
+      stringToCellMapping: stringToCellMapping,
       strings_and_cells: strings_and_cells,
   });
   var data = JSON.stringify(jsPsych.data.get().values());
@@ -158,7 +159,7 @@ var on_finish_callback = function () {
     questions: [
       {prompt: "What's your Prolific ID (needed for payment)?", rows: 2, columns:50 , required:true}, 
     ],
-    preamble: `<div>Thank you for participating in this study! Please answer the following question. </div>`,
+    preamble: `<div>Thank you for participating in this study! </div>`,
   };
 
 
@@ -912,12 +913,72 @@ choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
     };
 
 
+    var comprehension_check_1 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: "<p>What does 'beyond a reasonable doubt' mean?</p>",
+      choices: [
+        "There is no possible doubt at all",
+        "The jury is firmly convinced based on evidence",
+        "The jury has a feeling the defendant might be guilty",
+        "The defendant has to prove they are innocent"
+      ],
+      data: { id: 'check_1' },
+      correct_response: 1,
+      on_finish: function(data) {
+        data.correct = data.response === 1;
+      }
+    };
+
+    
+    
+    var comprehension_check_2 = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: "<p>When should a jury find the defendant 'not guilty'?</p>",
+      choices: [
+        "If the jury thinks the defendant is definitely guilty. without any doubt",
+        "If the jury is NOT convinced beyond a reasonable doubt",
+        "If the defendant denies the charges",
+        "If the evidence is overwhelming"
+      ],
+      data: { id: 'check_2' },
+      correct_response: 1,
+      on_finish: function(data) {
+        data.correct = data.response === 1;
+      }
+    };
+    
+
+var show_reasonabledoubt_again_2 = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: reasonabledoubt_explain.stimulus,
+  choices: [' '],
+  conditional_function: function() {
+    const last_trial = jsPsych.data.get().last(1).values()[0];
+    return last_trial.correct === false;
+  }
+};
+
+var comprehension_check_2_retry = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: comprehension_check_2.stimulus,
+  choices: comprehension_check_2.choices,
+  conditional_function: function() {
+    const last_trial = jsPsych.data.get().last(2).values()[0];
+    return last_trial.correct === false;
+  },
+  on_finish: comprehension_check_2.on_finish
+};
+
+
       var case_explain_evidence = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
           <div style="text-align: justify; width:66%; margin: 0 auto;" class="case-instructions-container">
-            <p>In the next task, the evidence for a criminal case is presented. All witnesses were sworn to tell the truth and informed that they commit perjury if they do not tell the truth.</p>
-            <p>The information about the case is presented to you only once. It will be read out to you. Therefore, please listen carefully.</p>
+            <p>In the next task, the evidence for a criminal case is presented. All witnesses swore to tell the truth.</p>
+            <p>The information about the case is presented to you only once. It will be read out to you. </p>
+            <p>Listen carefully to all information provided. While you listen, connect what you hear to the keywords you will see on the screen.</p>
+            <br><br>
+            <p><b>Please listen carefully. You will need this information for the next task. </b></p>
            <br>
             <div class="continue-instructions">Press SPACE to continue.</div>
           </div>
@@ -947,7 +1008,7 @@ choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `
       <div>
-             <font size = 4px font color = "black">      <p> Next, we need to set up your webcam.</p>
+             <font size = 4px font color = "black">      <p> For this part of the study, we need to set up your webcam.</p>
              <p> You need to help the camera get a good view of your eyes. To do that, it's <b>IMPORTANT</b> that you follow these rules: <br/> <br/> <br/></font>
              <img height="200px" width="1000px" src="img/instruct1.png"><br/>
              <br><br/>
@@ -1074,7 +1135,7 @@ choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
       const done = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: `
-        <div> You are done with this part.  </br>
+        <div> You are done with this part of the study.  </br>
         You can move around again. 
          <br></br>
          Press <b>SPACE</b> to continue!</div>`,
@@ -1139,8 +1200,6 @@ choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
 
 
 
-
-
     // FIXATION CROSS
     var fixation = {
       type: jsPsychHtmlKeyboardResponse,
@@ -1176,19 +1235,70 @@ choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
     type: jsPsychAudioKeyboardResponse,
     stimulus: '../img/1Case.m4a',
     prompt: `
-      <div style="text-align: center;">
-        <p id="jury_intro">Please listen to the case. <br>
-        Listen carefully to all information provided. While you listen, connect what you hear to the keywords below.</p>
-        <li>Access to safe</li>
-        <li>School event</li>
-        <li>Uncertain witness</li>
-        <li>Matching car</li>
-        <li>Loan repayment</li>
-             </div>
-    `,
+          <style>
+            .jspsych-content {
+              max-width: 100%;
+              width: 100%;
+            }
+          </style>
+          <div class="background">
+            <table style="width: 100vw; height: 100vh; table-layout: fixed;">
+              <tr>
+                <td id=""></td>
+                <td id="top-center" class="top-center"></td>
+                <td id=""></td>
+              </tr>
+              <tr>
+                <td id="top-left" class="top-left"></td>
+                <td id=""></td>
+                <td id="top-right" class="top-right"></td>
+              </tr>
+              <tr>
+                <td id="middle-left" class="middle-left"></td>
+                <td id=""></td>
+                <td id="middle-right" class="middle-right"></td>
+              </tr>   
+              <tr>
+                <td id=""></td>
+                <td id="middle-center" class="middle-center"></td>
+                <td id=""></td>
+              </tr>           
+              <tr style="height: 10vh; border-top: 1px solid black;">
+                <td id="label-left" class="label-left"></td>
+                <td id=""></td>
+                <td id="label-right" class="label-right"></td>
+              </tr>
+            </table>
+          </div>
+        `,
+    on_load: function() {
+
+      const strings = [
+        "access to safe",
+        "uncertain witness",
+        "matching car",
+        "school event",
+        "loan repayment"
+      ];
+      const cellClasses = [
+        "top-left",
+        "top-center",
+        "top-right",
+        "middle-left",
+        "middle-right"
+      ];
+
+      // Store the locations of the strings in the trial's data object using a temporary variable
+      jsPsych.getCurrentTrial().strings_and_cells = displayStringsInRandomCells(strings, cellClasses);
+
+    },
+    on_finish: function(data) {
+      // Save the stored data from the current trial
+      data.strings_and_cells = jsPsych.getCurrentTrial().strings_and_cells;
+    },
+
     choices: "NO_KEYS",
-    trial_ends_after_audio: false,
-trial_duration: 1000,
+    trial_ends_after_audio: true,
 
 
     data: {
@@ -1284,23 +1394,74 @@ trial_duration: 1000,
 
   // Case Condition 2: Inadmissible evidence, no additional instruction. 
 
+  let sharedLayout = null;
+
+
   var charge2_inadmissible_no_instructions = {
     type: jsPsychAudioKeyboardResponse,
     stimulus: '../img/10Wiretap.m4a',
     prompt: `
-      <div style="text-align: center;">
-        <p id="jury_intro">Please listen to the case. <br>
-        Listen carefully to all information provided. While you listen, connect what you hear to the keywords below.</p>
-        <li>Access to safe</li>
-        <li>School event</li>
-        <li>Uncertain witness</li>
-        <li>Matching car</li>
-        <li>Loan repayment</li>
-        </div>
+           <style>
+            .jspsych-content {
+              max-width: 100%;
+              width: 100%;
+            }
+          </style>
+          <div class="background">
+            <table style="width: 100vw; height: 100vh; table-layout: fixed;">
+              <tr>
+                <td id=""></td>
+                <td id="top-center" class="top-center"></td>
+                <td id=""></td>
+              </tr>
+              <tr>
+                <td id="top-left" class="top-left"></td>
+                <td id=""></td>
+                <td id="top-right" class="top-right"></td>
+              </tr>
+              <tr>
+                <td id="middle-left" class="middle-left"></td>
+                <td id=""></td>
+                <td id="middle-right" class="middle-right"></td>
+              </tr>   
+              <tr>
+                <td id=""></td>
+                <td id="middle-center" class="middle-center"></td>
+                <td id=""></td>
+              </tr>           
+              <tr style="height: 10vh; border-top: 1px solid black;">
+                <td id=""></td>
+                <td id="">Listen carefully!</td>
+                <td id=""></td>
+              </tr>
+            </table>
+          </div>
     `,
+    on_load: function() {
+
+      const strings = [
+        "access to safe",
+        "uncertain witness",
+        "matching car",
+        "school event",
+        "wiretap confession",
+        "loan repayment"
+      ];
+      const cellClasses = [
+        "top-left",
+        "top-center",
+        "top-right",
+        "middle-left",
+        "middle-center",
+        "middle-right"
+      ];
+
+      // Store the locations of the strings in the trial's data object using a temporary variable
+      sharedLayout = displayStringsInRandomCells(strings, cellClasses);
+
+    },
     choices: "NO_KEYS",
-    trial_ends_after_audio: false,
-trial_duration: 1000,
+    trial_ends_after_audio: true,
 
 
     data: {
@@ -1357,39 +1518,26 @@ trial_duration: 1000,
                 <td id=""></td>
               </tr>           
               <tr style="height: 10vh; border-top: 1px solid black;">
-                <td id="label-left" class="label-left"></td>
-                <td id=""></td>
-                <td id="label-right" class="label-right"></td>
+                <td id="label-left">Guilty! <br>Press G.</td>
+                <td id="">Decide: Is Jason guilty of theft?</td>
+                <td id="label-right">Not Guilty! <br>Press N.</td>
               </tr>
             </table>
           </div>
         `,
-    on_load: function() {
-
-      const strings = [
-        "access to safe",
-        "uncertain witness",
-        "matching car",
-        "school event",
-        "wiretap confession",
-        "loan repayment"
-      ];
-      const cellClasses = [
-        "top-left",
-        "top-center",
-        "top-right",
-        "middle-left",
-        "middle-center",
-        "middle-right"
-      ];
-
-      // Store the locations of the strings in the trial's data object using a temporary variable
-      jsPsych.getCurrentTrial().strings_and_cells = displayStringsInRandomCells(strings, cellClasses);
-
-    },
+        on_load: function() {
+          if (sharedLayout) {
+            sharedLayout.forEach(({ string, cell }) => {
+              const el = document.querySelector(`.${cell}`);
+              if (el) el.textContent = string;
+            });
+          } else {
+            console.error("sharedLayout is null");
+          }
+        },        
     on_finish: function(data) {
       // Save the stored data from the current trial
-      data.strings_and_cells = jsPsych.getCurrentTrial().strings_and_cells;
+      data.strings_and_cells = sharedLayout;
     },
     choices: ['g', 'n'],
     extensions: [
@@ -1408,22 +1556,68 @@ trial_duration: 1000,
     type: jsPsychAudioKeyboardResponse,
     stimulus: '../img/13WiretapDisregard.m4a',
     prompt: `
-      <div class="charge-container">
-       <div style="text-align: center;">
-        <p id="jury_intro">Please listen to the case. <br>
-        Listen carefully to all information provided. While you listen, connect what you hear to the keywords below.</p>
-        <li>Access to safe</li>
-        <li>School event</li>
-        <li>Uncertain witness</li>
-        <li>Matching car</li>
-        <li>Loan repayment</li>
-     </div>
+           <style>
+            .jspsych-content {
+              max-width: 100%;
+              width: 100%;
+            }
+          </style>
+          <div class="background">
+            <table style="width: 100vw; height: 100vh; table-layout: fixed;">
+              <tr>
+                <td id=""></td>
+                <td id="top-center" class="top-center"></td>
+                <td id=""></td>
+              </tr>
+              <tr>
+                <td id="top-left" class="top-left"></td>
+                <td id=""></td>
+                <td id="top-right" class="top-right"></td>
+              </tr>
+              <tr>
+                <td id="middle-left" class="middle-left"></td>
+                <td id=""></td>
+                <td id="middle-right" class="middle-right"></td>
+              </tr>   
+              <tr>
+                <td id=""></td>
+                <td id="middle-center" class="middle-center"></td>
+                <td id=""></td>
+              </tr>           
+              <tr style="height: 10vh; border-top: 1px solid black;">
+                <td id=""></td>
+                <td id="">Listen carefully!</td>
+                <td id=""></td>
+              </tr>
+            </table>
+          </div>
     `,
     choices: "NO_KEYS",
-    trial_ends_after_audio: false,
-trial_duration: 1000,
+    trial_ends_after_audio: true,
 
+on_load: function() {
 
+  const strings = [
+    "access to safe",
+    "uncertain witness",
+    "matching car",
+    "school event",
+    "wiretap confession",
+    "loan repayment"
+  ];
+  const cellClasses = [
+    "top-left",
+    "top-center",
+    "top-right",
+    "middle-left",
+    "middle-center",
+    "middle-right"
+  ];
+
+  // Store the locations of the strings in the trial's data object using a temporary variable
+  sharedLayout = displayStringsInRandomCells(strings, cellClasses);
+
+},
     data: {
       condition: "condition_3",
     },
@@ -1451,21 +1645,69 @@ trial_duration: 1000,
 
   var charge4_inadmissible_normative = {
     type: jsPsychAudioKeyboardResponse,
-    stimulus: '../img/14Wireta Normative.m4a',
+    stimulus: '../img/14WiretapNormative.m4a',
     prompt: `
-      <div style="text-align: center;">
-        <p id="jury_intro">Please listen to the case. <br>
-        Listen carefully to all information provided. While you listen, connect what you hear to the keywords below.</p>
-        <li>Access to safe</li>
-        <li>School event</li>
-        <li>Uncertain witness</li>
-        <li>Matching car</li>
-        <li>Loan repayment</li>
-        </div>    `,
+           <style>
+            .jspsych-content {
+              max-width: 100%;
+              width: 100%;
+            }
+          </style>
+          <div class="background">
+            <table style="width: 100vw; height: 100vh; table-layout: fixed;">
+              <tr>
+                <td id=""></td>
+                <td id="top-center" class="top-center"></td>
+                <td id=""></td>
+              </tr>
+              <tr>
+                <td id="top-left" class="top-left"></td>
+                <td id=""></td>
+                <td id="top-right" class="top-right"></td>
+              </tr>
+              <tr>
+                <td id="middle-left" class="middle-left"></td>
+                <td id=""></td>
+                <td id="middle-right" class="middle-right"></td>
+              </tr>   
+              <tr>
+                <td id=""></td>
+                <td id="middle-center" class="middle-center"></td>
+                <td id=""></td>
+              </tr>           
+              <tr style="height: 10vh; border-top: 1px solid black;">
+                <td id=""></td>
+                <td id="">Listen carefully!</td>
+                <td id=""></td>
+              </tr>
+            </table>
+          </div>
+  `,
     choices: "NO_KEYS",
-    trial_ends_after_audio: false,
-trial_duration: 1000,
+    trial_ends_after_audio: true,
+on_load: function() {
 
+  const strings = [
+    "access to safe",
+    "uncertain witness",
+    "matching car",
+    "school event",
+    "wiretap confession",
+    "loan repayment"
+  ];
+  const cellClasses = [
+    "top-left",
+    "top-center",
+    "top-right",
+    "middle-left",
+    "middle-center",
+    "middle-right"
+  ];
+
+  // Store the locations of the strings in the trial's data object using a temporary variable
+  sharedLayout = displayStringsInRandomCells(strings, cellClasses);
+
+},
   
     data: {
       condition: "condition_4",
@@ -1497,20 +1739,68 @@ trial_duration: 1000,
     type: jsPsychAudioKeyboardResponse,
     stimulus: '../img/15WiretapNeutralize.m4a',
     prompt: `
-       <div style="text-align: center;">
-        <p id="jury_intro">Please listen to the case. <br>
-        Listen carefully to all information provided. While you listen, connect what you hear to the keywords below.</p>
-        <li>Access to safe</li>
-        <li>School event</li>
-        <li>Uncertain witness</li>
-        <li>Matching car</li>
-        <li>Loan repayment</li>
-        </div>    `,
+           <style>
+            .jspsych-content {
+              max-width: 100%;
+              width: 100%;
+            }
+          </style>
+          <div class="background">
+            <table style="width: 100vw; height: 100vh; table-layout: fixed;">
+              <tr>
+                <td id=""></td>
+                <td id="top-center" class="top-center"></td>
+                <td id=""></td>
+              </tr>
+              <tr>
+                <td id="top-left" class="top-left"></td>
+                <td id=""></td>
+                <td id="top-right" class="top-right"></td>
+              </tr>
+              <tr>
+                <td id="middle-left" class="middle-left"></td>
+                <td id=""></td>
+                <td id="middle-right" class="middle-right"></td>
+              </tr>   
+              <tr>
+                <td id=""></td>
+                <td id="middle-center" class="middle-center"></td>
+                <td id=""></td>
+              </tr>           
+              <tr style="height: 10vh; border-top: 1px solid black;">
+                <td id=""></td>
+                <td id="">Listen carefully!</td>
+                <td id=""></td>
+              </tr>
+            </table>
+          </div>
+   `,
     choices: "NO_KEYS",
-    trial_ends_after_audio: false,
-trial_duration: 1000,
+    trial_ends_after_audio: true,
 
+on_load: function() {
 
+  const strings = [
+    "access to safe",
+    "uncertain witness",
+    "matching car",
+    "school event",
+    "wiretap confession",
+    "loan repayment"
+  ];
+  const cellClasses = [
+    "top-left",
+    "top-center",
+    "top-right",
+    "middle-left",
+    "middle-center",
+    "middle-right"
+  ];
+
+  // Store the locations of the strings in the trial's data object using a temporary variable
+  sharedLayout = displayStringsInRandomCells(strings, cellClasses);
+
+},
     data: {
       condition: "condition_5",
     },
@@ -1844,7 +2134,6 @@ var success_guard = {
     timeline.push(start_exp_survey_trial);
     timeline.push(fullscreenEnter);
     timeline.push(glasses_screening);
-
     timeline.push(testcam);
     timeline.push(calibration_instructions);
     timeline.push(init_camera);
@@ -1852,20 +2141,17 @@ var success_guard = {
     timeline.push(validation_instructions);
     timeline.push(validation);
     timeline.push(recalibrate);
-    timeline.push(donetest);
-
+    timeline.push(donetest);//
     timeline.push(audio_word_entry);
     timeline.push(check_word_trial);
     timeline.push(demographics_questionnaire);
-    timeline.push(introduction);
-
+    timeline.push(introduction);//
     timeline.push(distractors_instructions);
     timeline.push(distractors_story_1);
     timeline.push(distractotors_questions_1);
     timeline.push(distractotors_questions_2);
     timeline.push(distractotors_questions_3);
-    timeline.push(distractors_outro);
-
+    timeline.push(distractors_outro);//
     timeline.push(charge_screen);
     timeline.push(eval_access_to_the_safe);
     timeline.push(eval_school_event);
@@ -1880,15 +2166,43 @@ var success_guard = {
     timeline.push(eval_car_questions);
     timeline.push(eval_loan_questions);
     timeline.push(eval_legal_questions);
-    timeline.push(eval_outro);
-
+    timeline.push(eval_outro);//
     timeline.push(distractors2_drama);
     timeline.push(distractors2_drama_questions);
     timeline.push(distractors2_drama_questions2);
-    timeline.push(distractors2_outro);
     timeline.push(reasonabledoubt_explain);
-    timeline.push(case_explain_evidence);
+    timeline.push(comprehension_check_1);
+    
+    timeline.push({
+      type: jsPsychHtmlButtonResponse,
+      stimulus: function() {
+        const response = jsPsych.data.get().filter({id: 'check_1'}).last(1).values()[0].response;
+        if (response === 1) {
+          return `<p>You selected the correct response!<br><br>'Beyond a reasonable doubt' means the jury is <b>firmly convinced</b> based on evidence.<br><br>Please remember this during the rest of the study.</p>`;
+        } else {
+          return `<p>Your answer was incorrect.<br><br>'Beyond a reasonable doubt' means the jury is <b>firmly convinced</b> based on evidence.<br><br>Please remember this during the rest of the study.</p>`;
+        }
+      },
+      choices: ['Next']
+    });
+    
+    timeline.push(comprehension_check_2);
+        
+    timeline.push({
+      type: jsPsychHtmlButtonResponse,
+      stimulus: function() {
+        const response = jsPsych.data.get().filter({id: 'check_2'}).last(1).values()[0].response;
+        if (response === 1) {
+          return `<p>You selected the correct response!<br><br>A jury should find the defendant 'not guilty' if they are <b>NOT convinced beyond a reasonable doubt</b>.<br><br>Please continue.</p>`;
+        } else {
+          return `<p>Your answer was incorrect.<br><br>A jury should find the defendant 'not guilty' if they are <b>NOT convinced beyond a reasonable doubt</b>. If any doubt remains, the jury should not convict.<br><br>Please continue.</p>`;
+        }
+      },
+      choices: ['Next']
+    });
+    
 
+    timeline.push(distractors2_outro);
     timeline.push(calibration_instructions);
     timeline.push(init_camera);
     timeline.push(calibration);
@@ -1896,6 +2210,8 @@ var success_guard = {
     timeline.push(validation);
     timeline.push(recalibrate);
 
+
+    timeline.push(case_explain_evidence);
 
     // Randomly add one of the five conditions
 
