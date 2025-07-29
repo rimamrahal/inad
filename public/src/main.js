@@ -44,7 +44,7 @@
       jsPsych.endExperiment(`<div>
           Thanks for participating! 
           <br> <br>
-          Your participation code is 2FABFE32.
+          Your participation code is C1D0XJS3.
           <br> <br> 
           Please return to Prolific and enter this code to get paid.
           <br> <br>You can close this window afterwards.
@@ -78,7 +78,7 @@ var on_finish_callback = function () {
      })
      .done(function () {
       ("Thanks for taking part!" +
-      "Your participation code is: <b> 2FABFE32." +
+      "Your participation code is: <b> C1D0XJS3." +
       "Please enter it on Prolific. " +
       "You can then close this window.")
      })
@@ -180,7 +180,7 @@ choices: ['NOT wearing glasses, can participate.', 'Cannot participate.'],
         // Check if the answer is "Cannot take part"
         if (data.response === 1) {  // 0 corresponds to the first button ("Yes")
             // If they are wearing glasses, redirect and end the experiment
-            window.location.href = "https://app.prolific.com/submissions/complete?cc=C161H3CJ";  // Redirect to 
+            window.location.href = "https://app.prolific.com/submissions/complete?cc=CNRQGI5O";  // Redirect to 
         } else {
             // Otherwise, continue with the experiment
             console.log("Participant chose no glasses, continuing the experiment.");
