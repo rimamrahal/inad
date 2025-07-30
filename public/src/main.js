@@ -65,9 +65,9 @@ var on_finish_callback = function () {
       interaction: jsPsych.data.getInteractionData().json(),
       windowWidth: screen.width,
       windowHeight: screen.height, 
-      condition: condition,
-      stringToCellMapping: stringToCellMapping,
-      strings_and_cells: strings_and_cells,
+      condition: condition_value,
+      stringToCellMapping: stringToCellMapping_value,
+      strings_and_cells: strings_and_cells_value,
   });
   var data = JSON.stringify(jsPsych.data.get().values());
   $.ajax({
@@ -77,19 +77,15 @@ var on_finish_callback = function () {
        contentType: "application/json"
      })
      .done(function () {
-      ("Thanks for taking part!" +
-      "Your participation code is: <b> C1D0XJS3." +
-      "Please enter it on Prolific. " +
-      "You can then close this window.")
-     })
-     .fail(function () {
-       ("A problem occured while saving the data." +
-       "Please save the data to your computer and send it to the experimenter via email: rahal@coll.mpg.de.") ;
-       var failsavecsv = jsPsych.data.get().cvs();
-       var failsavefilename = jsPsych.data.get().values()[0].subject_id+".csv";
-       downloadCSV(csv,failsavefilename);
-  })
-}
+      alert("Thanks for taking part! Your participation code is: C1D0XJS3. Please enter it on Prolific. You can then close this window.");
+    })
+    .fail(function () {
+      alert("A problem occurred while saving the data. Please save the data to your computer and send it to the experimenter via email: rima-maria.rahal@wu.ac.at.");
+      var failsavecsv = jsPsych.data.get().csv(); // Typo fix: `cvs()` → `csv()`
+      var failsavefilename = jsPsych.data.get().values()[0].subject_id + ".csv";
+      downloadCSV(failsavecsv, failsavefilename); // Typo fix: use correct var
+    })
+    }
 
 
   // **********************
@@ -1101,7 +1097,7 @@ var comprehension_check_2_retry = {
           <p>The camera setup is a little worse than we'd like for this study.</p> 
           <p>Try adjusting your position a bit (e.g., turn off light sources behind you, move closer to the camera, rest your head on your hand).</p> 
           <p>Let's try training the webcam again.</p> 
-          <br></br> <p>When you're ready, press <b>SPACe</b> to continue.</p>
+          <br></br> <p>When you're ready, press <b>SPACE</b> to continue.</p>
       `,
       choices: [' '],
   }
@@ -1939,7 +1935,7 @@ on_load: function() {
 
   var case_evaluate_access_to_safe = {
     type: jsPsychSurveyLikert,
-    preamble: "1. Access to Safe (defendant could access the safe)",
+    preamble: "<h3>1. Access to Safe (defendant could access the safe)</h3>",
     questions: [
       {
         prompt: "How important is this evidence for determining the outcome of a legal case?",
@@ -2131,11 +2127,15 @@ on_load: function() {
     Now we'd like to know if you have any feedback about the study for us. 
     If so, please enter it below. If not, leave the field empty and click <b>Continue</b>.
      </div>`,
-     button_label: 'Weiter',  
+     button_label: 'Continue',  
     on_load: function () {
       document.body.style.cursor = 'auto'
     }
   };
+var condition_value = jsPsych.data.get().values().find(trial => trial.condition)?.condition;
+var stringToCellMapping_value = jsPsych.data.get().values().find(trial => trial.stringToCellMapping)?.stringToCellMapping;
+var strings_and_cells_value = jsPsych.data.get().values().find(trial => trial.strings_and_cells)?.strings_and_cells;
+
 
 var success_guard = {
   type: jsPsychCallFunction,
