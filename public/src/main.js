@@ -66,8 +66,8 @@ var on_finish_callback = function () {
       windowWidth: screen.width,
       windowHeight: screen.height, 
       condition: condition_value,
-      stringToCellMapping: stringToCellMapping_value,
-      strings_and_cells: strings_and_cells_value,
+      stringToCellMapping: globalStringToCellMapping,
+      strings_and_cells: globalstrings_and_cells,
   });
   var data = JSON.stringify(jsPsych.data.get().values());
   $.ajax({
@@ -81,9 +81,9 @@ var on_finish_callback = function () {
     })
     .fail(function () {
       alert("A problem occurred while saving the data. Please save the data to your computer and send it to the experimenter via email: rima-maria.rahal@wu.ac.at.");
-      var failsavecsv = jsPsych.data.get().csv(); // Typo fix: `cvs()` → `csv()`
+      var failsavecsv = jsPsych.data.get().csv();
       var failsavefilename = jsPsych.data.get().values()[0].subject_id + ".csv";
-      downloadCSV(failsavecsv, failsavefilename); // Typo fix: use correct var
+      downloadCSV(failsavecsv, failsavefilename);
     })
     }
 
@@ -1167,6 +1167,8 @@ var comprehension_check_2_retry = {
     /////// ACTUAL TRIAL 
     ///////
 
+    var globalStringToCellMapping; 
+    var globalstrings_and_cells ; 
 
     function displayStringsInRandomCells(strings, cellClasses) {
       // Safety check: Make sure we have enough cells for the strings
@@ -1207,6 +1209,8 @@ var comprehension_check_2_retry = {
       }
     
       console.log(stringToCellMapping);
+
+      globalStringToCellMapping = stringToCellMapping; 
   
     
       return stringToCellMapping;
@@ -1243,6 +1247,7 @@ var comprehension_check_2_retry = {
           }
         }]
     };
+
 
 
   // Case Condition 1: No inadmissible evidence. 
@@ -1474,6 +1479,7 @@ var comprehension_check_2_retry = {
 
       // Store the locations of the strings in the trial's data object using a temporary variable
       sharedLayout = displayStringsInRandomCells(strings, cellClasses);
+      globalstrings_and_cells = sharedLayout;
 
     },
     choices: "NO_KEYS",
@@ -1632,6 +1638,7 @@ on_load: function() {
 
   // Store the locations of the strings in the trial's data object using a temporary variable
   sharedLayout = displayStringsInRandomCells(strings, cellClasses);
+  globalstrings_and_cells = sharedLayout;
 
 },
     data: {
@@ -1722,7 +1729,7 @@ on_load: function() {
 
   // Store the locations of the strings in the trial's data object using a temporary variable
   sharedLayout = displayStringsInRandomCells(strings, cellClasses);
-
+  globalstrings_and_cells = sharedLayout;
 },
   
     data: {
@@ -1815,6 +1822,7 @@ on_load: function() {
 
   // Store the locations of the strings in the trial's data object using a temporary variable
   sharedLayout = displayStringsInRandomCells(strings, cellClasses);
+  globalstrings_and_cells = sharedLayout;
 
 },
     data: {
@@ -1839,7 +1847,7 @@ on_load: function() {
       }
     ],
   };
-
+ 
 
   // Case Survey
 
